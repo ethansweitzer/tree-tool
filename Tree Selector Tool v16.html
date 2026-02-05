@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tree Environmental Preference Selector</title>
+
+  <style>
+    html {
+      overflow-y: scroll;
+}
+html {
+  scroll-behavior: smooth;
+}
+#back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background-color: #633663;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #88AD6D;
+      margin: 0;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background-color: #EDE4DA;
+      max-width: 900px;
+      width: 100%;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      line-height: 1.6;
+    }
+
+    h1, h2 { margin-top: 0; margin-bottom: 0.5rem; }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fdfaf7;
+    }
+
+.help-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: #999;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: help;
+  margin-left: 6px;
+  vertical-align: middle;
+  position: relative;
+}
+
+.help-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.4;
+  width: 200px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  pointer-events: none;
+  width: 295px;
+  white-space: pre-line;
+  text-align: left;
+}
+
+.help-icon::before {
+  content: "";
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #333;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.help-icon:hover::after, .help-icon:hover::before {
+  visibility: visible;
+  opacity: 1;
+}
+
+    .multiselect { position: relative; width: 100%; }
+    .selectBox { position: relative; cursor: pointer; }
+    .selectBox select, #carbonate {
+      width: 100%;
+      height: 40px; 
+      padding: 8px 10px;
+      padding-right: 35px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
+      cursor: pointer;
+      color: #333;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      appearance: none;   
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px top 50%;
+      background-size: 10px auto;
+    }
+
+    #carbonate option {
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+    .checkboxes label {
+      font-size: 13px !important;
+      font-weight: 400 !important;
+      padding: 6px 10px;
+    }
+
+    .multiselect > label, .filter-item > label {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .overSelect { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+    
+    .checkboxes {
+      display: none;
+      position: absolute;
+      left: 0; right: 0; top: 100%;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      z-index: 10;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .checkboxes label {
+      display: block;
+      padding: 8px 10px;
+      font-weight: 400;
+      cursor: pointer;
+      margin: 0;
+    }
+    .checkboxes label:hover { background-color: #f0f0f0; }
+    .checkboxes input { margin-right: 10px; }
+
+input[type="checkbox"] {
+  accent-color: #4E683B;
+}
+
+    label { font-weight: 600; display: block; margin-bottom: 4px; }
+
+    button {
+      grid-column: 1 / -1;
+      padding: 0.8rem;
+      font-size: 1rem;
+	  font-weight: bold;
+      cursor: pointer;
+      background-color: #4E683B;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    button[onclick="clearAllFilters()"] {
+      background-color: #666;
+    }
+
+    .tree {
+      display: flex;
+      justify-content: flex-start;
+      align-items: start;
+      gap: 2rem;
+      padding: 1.5rem 0;
+      border-bottom: 2px solid #D9C6B0;
+      transition: all 0.2s ease;
+    }
+
+#results:not(.grid-view) .tree {
+  display: flex;
+  flex-direction: row; 
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 30px;
+  width: 100%;
+}
+
+#results:not(.grid-view) .tree > div:nth-child(3) {
+  order: 1 !important; 
+  width: 120px;
+  flex: 0 0 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#results:not(.grid-view) .tree > div:nth-child(2) {
+  order: 2 !important; 
+  flex: 1; 
+  text-align: left;
+}
+
+#results:not(.grid-view) .tree > div:nth-child(1) {
+  order: 3 !important; 
+  width: 160px;
+  flex: 0 0 160px;
+}
+
+#results:not(.grid-view) img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  display: block;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+    .score { font-weight: 800; color: #178A29; margin-bottom: 4px; font-size: 0.9rem; }
+    .latin { font-style: italic; color: #555; margin-bottom: 8px; display: block; }
+    .meta { font-size: 0.9rem; color: #444; line-height: 1.5; }
+    .meta strong { color: #333; }
+
+    .plan-selector .qty-controls {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .plan-selector:has(.plan-include:checked) .qty-controls {
+      display: flex;
+    }
+
+    #results.grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    #results.grid-view .tree {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #D9C6B0;
+      padding: 10px;
+      cursor: pointer;
+      gap: 0.5rem;
+    }
+
+    #results.grid-view .tree img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 8px;
+    }
+
+    #results.grid-view .meta { display: none; }
+    #results.grid-view .tree.expanded .meta { 
+      display: block; 
+      text-align: left; 
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .view-controls { margin-bottom: 1rem; display: flex; gap: 10px; }
+    .view-btn {
+      background-color: #eee;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+
+    .view-controls .view-btn.active {
+      background-color: #4E683B !important;
+      color: white !important;
+      border-color: #3d522d;
+    }
+
+.help-icon.has-image:hover::after {
+  content: ""; 
+  position: absolute;
+  top: 160%;           
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 85vw;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #fff; 
+  border: 2px solid #555;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  z-index: 9999;       
+}
+
+.help-icon.has-image:hover::before {
+  content: "";
+  position: absolute;
+  top: 130%;           
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid transparent;
+  border-bottom-color: #555; 
+  visibility: visible;
+  opacity: 1;
+  z-index: 10000;
+}
+
+.meta u {
+  text-decoration-color: #2d6a4f;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  color: #1b4332;
+  font-weight: 500;
+}
+
+.help-icon.soil-texture:hover::after {
+  background-image: url('images/soiltexture.png');
+  width: 550px;
+  height: 380px; 
+}
+
+.help-icon.soil-moisture:hover::after {
+  background-image: url('images/soilmoisture.png');
+  width: 550px;
+  height: 220px;
+}
+
+.match-group {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+}
+
+.match-group {
+  border: none !important;
+  padding: 0 !important;
+}
+
+.match-group summary {
+  margin: 0 0 20px 0 !important; 
+}
+
+.match-group:first-of-type summary {
+  margin-top: 10 !important;
+}
+
+#results.grid-view .group-content {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+  gap: 20px !important;
+  width: 100% !important;
+}
+
+#results:not(.grid-view) .group-content {
+  display: block !important;
+}
+
+#results:not(.grid-view) .tree {
+  border-bottom: 2px solid #D9C6B0 !important;
+}
+
+summary::-webkit-details-marker {
+  margin: 0 0 20px 0 !important; 
+}
+
+    @media print {
+      body { background-color: white !important; padding: 0; }
+      .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+      .filters, button, .help-icon, #clearBtn, .view-controls { display: none !important; }
+      .tree { border-bottom: 1px solid #ccc; page-break-inside: avoid; }
+    }
+
+    #clearBtn, #planBtn { width: 100%; grid-column: 1 / -1; margin-top: -10px; }
+
+.update-footer {
+  margin-top: 20px;
+  padding: 0px 0;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.update-footer time {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Optional: Add a subtle icon using a pseudo-element */
+.update-footer p::before {
+  content: "📆 ";
+  font-size: 1rem;
+}
+
+  </style>
+</head>
+
+<body>
+<div class="container">
+<h1>Funded Tree and Shrub Environmental Preference Selector</h1>
+<p>Select multiple site conditions to filter species.</p>
+
+<div class="project-info" style="margin-bottom: 2rem; padding: 1rem; background: #fdfaf7; border-radius: 8px; border: 1px solid #ccc;">
+  <label for="projectTitle" style="font-size: 1.1rem;">Project Name:</label>
+  <input type="text" id="projectTitle" placeholder="e.g. RPXXXX LastName Planting Assortment" 
+       style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;">
+</div>
+
+<div class="filters">
+  <!-- Soil Texture -->
+  <div class="multiselect">
+    <label>Soil Texture      <span class="help-icon has-image soil-texture" data-tooltip="Loading resource...">?</span>
+  </label>
+    <div class="selectBox" onclick="toggleDropdown('textureChecks')">
+      <select><option>Select Soil Texture(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="textureChecks" class="checkboxes">
+      <label><input type="checkbox" name="soilTexture" value="Organic">Organic</label>
+      <label><input type="checkbox" name="soilTexture" value="Clay">Clay</label>
+      <label><input type="checkbox" name="soilTexture" value="Fine Loam">Fine Loam</label>
+      <label><input type="checkbox" name="soilTexture" value="Coarse Loam">Coarse Loam</label>
+      <label><input type="checkbox" name="soilTexture" value="Sand">Sand</label>
+      <label><input type="checkbox" name="soilTexture" value="Rock">Rock</label>
+      <label><input type="checkbox" name="soilTexture" value="Bedrock">Bedrock</label>
+    </div>
+  </div>
+
+  <!-- Soil Moisture -->
+  <div class="multiselect">
+    <label>Soil Moisture  <span class="help-icon has-image soil-moisture" data-tooltip="Loading resource...">?</span>
+  </label>
+    <div class="selectBox" onclick="toggleDropdown('moistureChecks')">
+      <select><option>Select Soil Moisture(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="moistureChecks" class="checkboxes">
+      <label><input type="checkbox" name="soilMoisture" value="Dry">Dry</label>
+      <label><input type="checkbox" name="soilMoisture" value="Fresh">Fresh</label>
+      <label><input type="checkbox" name="soilMoisture" value="Moist">Moist</label>
+      <label><input type="checkbox" name="soilMoisture" value="Wet">Wet</label>
+    </div>
+  </div>
+
+  <!-- CoW -->
+  <div class="multiselect">
+    <label>Coefficient of Wetness  <span class="help-icon" data-tooltip="Lowland Species = -5 to -3&#10;Variable Species (found in either environment) = -2 to 2&#10;Upland Species = 3 to 5">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('cowChecks')">
+      <select><option>Select CoW Class(es)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="cowChecks" class="checkboxes">
+      <label><input type="checkbox" name="CoW" value="Lowland">Lowland (-5 to -3)</label>
+      <label><input type="checkbox" name="CoW" value="Variable">Variable (-2 to 2)</label>
+      <label><input type="checkbox" name="CoW" value="Upland">Upland (2 to 5)</label>
+    </div>
+  </div>
+
+  <!-- Sunlight -->
+  <div class="multiselect">
+    <label>Sunlight  <span class="help-icon" data-tooltip="Full Sun = more than 6 hours of direct sun per day&#10;Part Shade = 4 to 6 hours of direct sun per day&#10;Shade = less than 4 hours of direct sun per day">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('sunlightChecks')">
+      <select><option>Select Sunlight Level(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="sunlightChecks" class="checkboxes">
+      <label><input type="checkbox" name="sunlight" value="Full Sun">Full Sun ☀️</label>
+      <label><input type="checkbox" name="sunlight" value="Part Shade">Part Shade 🌤️</label>
+      <label><input type="checkbox" name="sunlight" value="Shade">Shade ☁️</label>
+    </div>
+  </div>
+
+  <!-- Carbonate Presence -->
+<div class="filter-item">
+  <label for="carbonate">Carbonate Presence  <span class="help-icon" data-tooltip="Select the relative carbonate presense based on the reactivity of the ''fizz test''">?</span>
+</label>
+  <select id="carbonate" onchange="updateClearButton()">
+    <option value="" disabled selected>Select Carbonate Presence</option>
+    <option value="None">None</option>
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+</div>
+
+  <button onclick="runFilter()">
+  Find matching species
+</button>
+  <button id="clearBtn" onclick="clearAllFilters()" style="display: none; background-color: #666;">
+  Clear All Filters
+</button>
+<button id="planBtn" onclick="exportPlantingPlan()" style="display: none; background-color: #384B2A;">
+  Export Selection as Planting Plan
+</button>
+
+</div>
+
+<div class="view-controls">
+  <button class="view-btn active" onclick="setView('list', this)">List View</button>
+  <button class="view-btn" onclick="setView('grid', this)">Grid View</button>
+</div>
+
+<h2 id="resultsHeader" style="display: none; justify-content: space-between; align-items: center;">
+  Results 
+  <span id="resultCount" style="font-size: 1rem; font-weight: normal; color: #666;"></span>
+</h2>
+<div id="results"></div>
+
+<script>
+
+/* ============================================================
+   DROPDOWN CONTROLS
+   ============================================================ */
+   
+function toggleDropdown(id) {
+  const checkboxes = document.getElementById(id);
+  const isVisible = checkboxes.style.display === "block";
+  document.querySelectorAll('.checkboxes').forEach(el => el.style.display = 'none');
+  checkboxes.style.display = isVisible ? "none" : "block";
+}
+
+window.onclick = function(event) {
+  if (!event.target.closest('.multiselect')) {
+    document.querySelectorAll('.checkboxes').forEach(el => el.style.display = 'none');
+  }
+};
+
+/* ============================================================
+   TREE DATA
+   ============================================================ */
+
+const trees = [
+  {
+    species: "Abies balsamea",
+    commonName: "Balsam Fir",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/abies_balsamea.jpg"
+  },
+  {
+    species: "Acer nigrum",
+    commonName: "Black Maple",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/acer_nigrum.jpg"
+  },
+  {
+    species: "Acer rubrum",
+    commonName: "Red Maple",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["High"],
+    image: "Images/acer_rubrum.jpg"
+  },
+  {
+    species: "Acer saccharinum",
+    commonName: "Silver Maple",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Fresh", "Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/acer_saccharinum.jpg"
+  },
+  {
+    species: "Acer saccharum",
+    commonName: "Sugar Maple",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/acer_saccharum.jpg"
+  },
+  {
+    species: "Acer x freemanii",
+    commonName: "Freeman's Maple",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["Medium", "High"],
+    image: "Images/acer_freemanii.jpg"
+  },
+  {
+    species: "Amelanchier arborea",
+    commonName: "Downy Serviceberry",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["None"],
+    image: "Images/amelanchier_arborea.jpg"
+  },
+  {
+    species: "Amelanchier laevis",
+    commonName: "Smooth Serviceberry",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/amelanchier_laevis.jpg"
+  },
+  {
+    species: "Betula alleghaniensis",
+    commonName: "Yellow Birch",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/betula_alleghaniensis.jpg"
+  },
+  {
+    species: "Betula papyrifera",
+    commonName: "Paper Birch",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/betula_papyrifera.jpg"
+  },
+  {
+    species: "Carpinus caroliniana",
+    commonName: "Blue-beech",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/carpinus_caroliniana.jpg"
+  },
+  {
+    species: "Carya cordiformis",
+    commonName: "Bitternut Hickory",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/carya_cordiformis.jpg"
+  },
+  {
+    species: "Carya ovata",
+    commonName: "Shagbark Hickory",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/carya_ovata.jpg"
+  },
+  {
+    species: "Celtis occidentalis",
+    commonName: "Hackberry",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/celtis_occidentalis.jpg"
+  },
+  {
+    species: "Cercis canadensis",
+    commonName: "Eastern Redbud",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/cercis_canadensis.jpg"
+  },
+  {
+    species: "Cornus alternifolia",
+    commonName: "Alternateleaf Dogwood",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/cornus_alternifolia.jpg"
+  },
+  {
+    species: "Crataegus crus-galli",
+    commonName: "Cockspur Hawthorn",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/crataegus_crus-galli.jpg"
+  },
+  {
+    species: "Crataegus mollis",
+    commonName: "Downy Hawthorn",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/crataegus_mollis.jpg"
+  },
+  {
+    species: "Fagus grandifolia",
+    commonName: "American Beech",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/fagus_grandifolia.jpg"
+  },
+  {
+    species: "Gymnocladus dioicus",
+    commonName: "Kentucky Coffeetree",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low", "Medium"],
+    image: "Images/gymnocladus_dioicus.jpg"
+  },
+  {
+    species: "Hamamelis virginiana",
+    commonName: "American Witch-hazel",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/hamamelis_virginiana.jpg"
+  },
+  {
+    species: "Ilex verticillata",
+    commonName: "Winterberry",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Fresh", "Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/ilex_verticillata.jpg"
+  },
+  {
+    species: "Juglans cinerea",
+    commonName: "Butternut",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun"],
+    carbonate: ["None"],
+    image: "Images/juglans_cinerea.jpg"
+  },
+  {
+    species: "Juglans nigra",
+    commonName: "Black Walnut",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["High"],
+    image: "Images/juglans_nigra.jpg"
+  },
+  {
+    species: "Juniperus virginiana",
+    commonName: "Eastern Red Cedar",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/juniperus_virginiana.jpg"
+  },
+  {
+    species: "Larix laricina",
+    commonName: "Tamarack",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/larix_laricina.jpg"
+  },
+  {
+    species: "Liriodendron tulipifera",
+    commonName: "Tulip Tree",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/liriodendron_tulipifera.jpg"
+  },
+  {
+    species: "Picea glauca",
+    commonName: "White Spruce",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/picea_glauca.jpg"
+  },
+  {
+    species: "Pinus strobus",
+    commonName: "White Pine",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["None"],
+    image: "Images/pinus_strobus.jpg"
+  },
+  {
+    species: "Platanus occidentalis",
+    commonName: "Sycamore",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["None"],
+    image: "Images/platanus_occidentalis.jpg"
+  },
+  {
+    species: "Populus balsamifera",
+    commonName: "Balsam Poplar",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun"],
+    carbonate: ["High"],
+    image: "Images/populus_balsamifera.jpg"
+  },
+  {
+    species: "Populus deltoides",
+    commonName: "Eastern Cottonwood",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/populus_deltoides.jpg"
+  },
+  {
+    species: "Populus grandidentata",
+    commonName: "Largetooth Aspen",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun"],
+    carbonate: ["Medium"],
+    image: "Images/populus_grandidentata.jpg"
+  },
+  {
+    species: "Populus tremuloides",
+    commonName: "Trembling Aspen",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/populus_tremuloides.jpg"
+  },
+  {
+    species: "Prunus serotina",
+    commonName: "Black Cherry",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium", "High"],
+    image: "Images/prunus_serotina.jpg"
+  },
+  {
+    species: "Prunus virginiana",
+    commonName: "Chokecherry",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/prunus_virginiana.jpg"
+  },
+  {
+    species: "Quercus alba",
+    commonName: "White Oak",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/quercus_alba.jpg"
+  },
+  {
+    species: "Quercus bicolor",
+    commonName: "Swamp White Oak",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/quercus_bicolor.jpg"
+  },
+  {
+    species: "Quercus macrocarpa",
+    commonName: "Bur Oak",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/quercus_macrocarpa.jpg"
+  },
+  {
+    species: "Quercus palustris",
+    commonName: "Pin Oak",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/quercus_palustris.jpg"
+  },
+  {
+    species: "Quercus rubra",
+    commonName: "Red Oak",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["Low"],
+    image: "Images/quercus_rubra.jpg"
+  },
+  {
+    species: "Rhus typhina",
+    commonName: "Staghorn Sumac",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/rhus_typhina.jpg"
+  },
+  {
+    species: "Salix amygdaloides",
+    commonName: "Peachleaf Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/salix_amygdaloides.jpg"
+  },
+  {
+    species: "Salix bebbiana",
+    commonName: "Bebb's Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Unknown"],
+    image: "Images/salix_bebbiana.jpg"
+  },
+  {
+    species: "Salix discolor",
+    commonName: "Pussy Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun"],
+    carbonate: ["Medium"],
+    image: "Images/salix_discolor.jpg"
+  },
+  {
+    species: "Salix eriocephala",
+    commonName: "Heart-leaved Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun"],
+    carbonate: ["Medium"],
+    image: "Images/salix_eriocephala.jpg"
+  },
+  {
+    species: "Salix exigua",
+    commonName: "Narrowleaf Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["High"],
+    image: "Images/salix_exigua.jpg"
+  },
+  {
+    species: "Salix lucida",
+    commonName: "Shining Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Medium"],
+    image: "Images/salix_lucida.jpg"
+  },
+  {
+    species: "Salix nigra",
+    commonName: "Black Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/salix_nigra.jpg"
+  },
+  {
+    species: "Salix petiolaris",
+    commonName: "Meadow Willow",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
+    soilMoisture: ["Moist", "Wet"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun"],
+    carbonate: ["Unknown"],
+    image: "Images/salix_petiolaris.jpg"
+  },
+  {
+    species: "Thuja occidentalis",
+    commonName: "Eastern White Cedar",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Lowland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["High"],
+    image: "Images/thuja_occidentalis.jpg"
+  },
+  {
+    species: "Tilia americana",
+    commonName: "Basswood",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Dry", "Fresh", "Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/tilia_americana.jpg"
+  },
+  {
+    species: "Tsuga canadensis",
+    commonName: "Eastern Hemlock",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Upland"],
+    sunlight: ["Part Shade", "Shade"],
+    carbonate: ["None"],
+    image: "Images/tsuga_canadensis.jpg"
+  },
+  {
+    species: "Ulmus americana",
+    commonName: "American Elm",
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade"],
+    carbonate: ["Medium"],
+    image: "Images/ulmus_americana.jpg"
+  },
+  {
+    species: "Viburnum lentago",
+    commonName: "Nannyberry",
+    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
+    soilMoisture: ["Moist"],
+    CoW: ["Variable"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    carbonate: ["Low"],
+    image: "Images/viburnum_lentago.jpg"
+  }
+];
+
+/* ============================================================
+   FILTERING LOGIC
+   ============================================================ */
+   
+function runFilter() {
+  const getChecked = (name) => 
+    Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+
+  const filters = {
+    soilTexture: getChecked("soilTexture"),
+    soilMoisture: getChecked("soilMoisture"),
+    CoW: getChecked("CoW"),
+    sunlight: getChecked("sunlight"),
+    carbonate: document.getElementById("carbonate").value
+  };
+
+  const carbRank = { "None": 0, "Low": 1, "Medium": 2, "High": 3, "Unknown": 0 };
+
+  const scored = trees.map(tree => {
+    let score = 0;
+    let maxScore = 0;
+
+    Object.keys(filters).forEach(key => {
+      const userSelection = filters[key];
+      if (key === "carbonate") {
+        if (userSelection !== "") {
+          maxScore++;
+          const treeRanks = Array.isArray(tree.carbonate) ? tree.carbonate.map(val => carbRank[val] || 0) : [carbRank[tree.carbonate] || 0];
+          if (Math.max(...treeRanks) >= carbRank[userSelection]) score++;
+        }
+      } else {
+        if (userSelection.length > 0) {
+          maxScore++;
+          if (userSelection.some(val => tree[key].includes(val))) score++;
+        }
+      }
+    });
+    return { tree, score, maxScore, ratio: maxScore > 0 ? score / maxScore : 1 };
+  });
+
+  const results = scored.filter(r => r.score > 0 || r.maxScore === 0).sort((a, b) => b.ratio - a.ratio);
+  renderResults(results);
+  document.getElementById('clearBtn').style.display = "block";
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+
+function highlightMatches(treeTraits, category) {
+  const checked = (category === "carbonate") 
+    ? [document.getElementById("carbonate").value] 
+    : Array.from(document.querySelectorAll(`input[name="${category}"]:checked`)).map(cb => cb.value);
+  
+  const carbRank = { "None": 0, "Low": 1, "Medium": 2, "High": 3, "Unknown": 0 };
+  const siteRank = carbRank[document.getElementById("carbonate").value] || 0;
+  
+  return treeTraits.map(trait => {
+    let isMatch = false;
+    if (category === "carbonate") {
+      isMatch = siteRank > 0 && carbRank[trait] >= siteRank;
+    } else {
+      isMatch = checked.includes(trait);
+    }
+    
+    return isMatch ? `<u style="text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: #2d6a4f;">${trait}</u>` : trait;
+  }).join(", ");
+}
+
+function renderResults(results, isClearing = false) {
+  const container = document.getElementById("results");
+  const pdfBtn = document.getElementById("pdfBtn");
+  const planBtn = document.getElementById("planBtn");
+  const resultsHeader = document.getElementById("resultsHeader");
+  const clearBtn = document.getElementById("clearBtn");
+  const isGridView = container.classList.contains("grid-view"); 
+
+  container.innerHTML = ""; 
+
+  if (isClearing || results.length === 0) {
+    if (pdfBtn) pdfBtn.style.display = "none";
+    if (planBtn) planBtn.style.display = "none";
+    if (resultsHeader) resultsHeader.style.display = "none";
+    if (isClearing && clearBtn) clearBtn.style.display = "none";
+    if (results.length === 0 && !isClearing) container.innerHTML = "<p>No suitable species found.</p>";
+    return;
+  }
+
+  resultsHeader.style.display = "flex";
+  if (pdfBtn) pdfBtn.style.display = "block";
+  if (planBtn) planBtn.style.display = "block";
+  document.getElementById("resultCount").textContent = `${results.length} species found`;
+
+
+  const isMiss = (category, treeTraits) => {
+    const checked = (category === "carbonate") 
+      ? document.getElementById("carbonate").value 
+      : Array.from(document.querySelectorAll(`input[name="${category}"]:checked`)).map(cb => cb.value);
+    if (!checked || checked.length === 0 || checked === "") return false;
+    if (category === "carbonate") {
+      const carbRank = { "None": 0, "Low": 1, "Medium": 2, "High": 3, "Unknown": 0 };
+      const siteRank = carbRank[checked] || 0;
+      const treeRanks = Array.isArray(treeTraits) ? treeTraits.map(v => carbRank[v] || 0) : [carbRank[treeTraits] || 0];
+      return Math.max(...treeRanks) < siteRank;
+    }
+    return !checked.some(val => treeTraits.includes(val));
+  };
+
+  const labelStyle = (cat, traits) => isMiss(cat, traits) 
+    ? `style="color: #ae2012; font-weight: bold; text-decoration: underline; text-decoration-color: #ae2012; text-underline-offset: 3px;"` 
+    : `style="font-weight: bold;"`;
+    
+
+  const groups = results.reduce((acc, item) => {
+    const percent = Math.round(item.ratio * 100);
+    if (!acc[percent]) acc[percent] = [];
+    acc[percent].push(item);
+    return acc;
+  }, {});
+
+  const sortedPercents = Object.keys(groups).sort((a, b) => b - a);
+
+  sortedPercents.forEach((percent, index) => {
+    const hue = percent * 1.2; 
+    const matchColor = `hsl(${hue}, 70%, 25%)`;
+
+    const details = document.createElement("details");
+    details.open = true;
+    details.className = "match-group";
+    details.style.gridColumn = "1 / -1"; 
+
+    const summary = document.createElement("summary");
+    summary.style = `
+      list-style: none; cursor: pointer; padding: 15px 0;
+      border-bottom: 2px solid ${matchColor}; color: ${matchColor};
+      font-size: 1.4rem; font-weight: 800; display: flex;
+      justify-content: space-between; align-items: center;
+      /* CSS 'first-of-type' rule handles the margin for the very top header */
+    `;
+    summary.innerHTML = `<span>${percent}% Match</span><span style="font-size: 0.9rem; font-weight: normal; color: #666;">${groups[percent].length} species found &nbsp; ▾</span>`;
+    details.appendChild(summary);
+
+    const listContainer = document.createElement("div");
+    listContainer.className = "group-content";
+    
+
+    groups[percent].forEach(({ tree, ratio }) => {
+      const div = document.createElement("div");
+      div.className = "tree";
+      div.onclick = function(e) { 
+        if (!e.target.closest('.plan-selector')) this.classList.toggle('expanded'); 
+      };
+
+      const scoreStyle = `color: ${matchColor}; font-weight: 800;`;
+
+      div.innerHTML = `
+        <div>${tree.image ? `<img src="${tree.image}" alt="${tree.commonName}">` : ""}</div>
+        <div style="flex-grow: 1;">
+          <div class="score" style="${scoreStyle}">Match: ${percent}%</div>
+          <div><strong>${tree.commonName}</strong></div>
+          <div class="latin" style="font-size: 0.85rem; color: #666; font-style: italic;">${tree.species}</div>
+          <div class="meta">
+            <hr style="border: 0; border-top: 1.5px solid #E4D5C5;">
+            <span ${labelStyle("soilTexture", tree.soilTexture)}>Soil Texture:</span> ${highlightMatches(tree.soilTexture, "soilTexture")}<br>
+            <span ${labelStyle("soilMoisture", tree.soilMoisture)}>Soil Moisture:</span> ${highlightMatches(tree.soilMoisture, "soilMoisture")}<br>
+            <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
+            <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
+            <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}
+          </div>
+        </div>
+        <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
+          <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+            <input type="checkbox" class="plan-include" style="margin: 0;"> Add to Plan
+          </label>
+          <div class="qty-controls">
+            <label style="font-size: 0.75rem; margin: 0;">Quantity:</label>
+            <input type="number" class="plan-qty" value="1" min="1" style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        </div>`;
+      
+      listContainer.appendChild(div);
+    });
+
+    details.appendChild(listContainer);
+    container.appendChild(details);
+  });
+}
+
+/* ============================================================
+   UTILITIES & EXPORTS
+   ============================================================ */
+   
+function updateCounter(categoryName, selectBoxId) {
+  const checkedCount = document.querySelectorAll(`input[name="${categoryName}"]:checked`).length;
+  const selectBox = document.getElementById(selectBoxId);
+  if (!selectBox) return;
+  const selectElement = selectBox.parentElement.querySelector('select option');
+  const defaults = { textureChecks: "Select Textures", moistureChecks: "Select Moisture", cowChecks: "Select CoW", sunlightChecks: "Select Sunlight" };
+  selectElement.textContent = checkedCount > 0 ? `${checkedCount} Selected` : (defaults[selectBoxId] || "Select Options");
+}
+
+document.addEventListener('change', (e) => {
+  if (e.target.type === 'checkbox' && e.target.name) {
+    const parentDropdown = e.target.closest('.checkboxes');
+    if (parentDropdown) updateCounter(e.target.name, parentDropdown.id);
+  }
+});
+
+function clearAllFilters() {
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);  
+  const carb = document.getElementById("carbonate");
+  if (carb) { carb.value = ""; carb.selectedIndex = 0; }
+  ["textureChecks", "moistureChecks", "cowChecks", "sunlightChecks"].forEach(id => {
+    const nameMap = { textureChecks: "soilTexture", moistureChecks: "soilMoisture", cowChecks: "CoW", sunlightChecks: "sunlight" };
+    updateCounter(nameMap[id], id);
+  });
+  renderResults([], true); 
+}
+
+function setView(viewType, btn) {
+  const container = document.getElementById("results");
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  container.className = (viewType === 'grid') ? 'grid-view' : '';
+}
+
+function exportPlantingPlan() {
+  const projectTitle = document.getElementById("projectTitle").value || "Planting Plan";
+  const selectedTrees = [];
+  let totalQty = 0;
+
+  document.querySelectorAll(".tree").forEach(treeDiv => {
+    const isIncluded = treeDiv.querySelector(".plan-include").checked;
+    if (isIncluded) {
+      const common = treeDiv.querySelector("strong").textContent;
+      const latin = treeDiv.querySelector(".latin").textContent;
+      const qty = parseInt(treeDiv.querySelector(".plan-qty").value) || 0;
+      
+      selectedTrees.push({ common, latin, qty });
+      totalQty += qty;
+    }
+  });
+
+  if (selectedTrees.length === 0) {
+    alert("Please select at least one species to include in your plan.");
+    return;
+  }
+
+  let rowsHtml = "";
+  selectedTrees.forEach(t => {
+    rowsHtml += `<tr>
+      <td>${t.common}</td>
+      <td class="italic">${t.latin}</td>
+      <td class="center">${t.qty}</td>
+    </tr>`;
+  });
+
+  const printWindow = window.open('', '_blank');
+  let tableHtml = `
+    <html><head><title>${projectTitle}</title>
+    <style>
+  @media print { 
+    @page { margin: 1.5cm; } 
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+  body { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    padding: 20px; 
+    color: #1a2f23; 
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact !important; 
+    print-color-adjust: exact !important;
+  }
+  h1 { 
+    color: #384B2A;
+    border-bottom: 4px solid #64864B;
+    padding-bottom: 12px; 
+    margin-bottom: 30px; 
+    font-size: 26px;
+    letter-spacing: -0.5px;
+  }
+  table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 10px; 
+    border: 1px solid #C2D5B4; 
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th { 
+    background-color: #64864B !important; 
+    color: #ffffff !important; 
+    font-weight: 600; 
+    text-transform: uppercase; 
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    padding: 16px 12px; 
+    text-align: left;
+    -webkit-print-color-adjust: exact !important; 
+    print-color-adjust: exact !important;
+  }
+  td { 
+    padding: 14px 12px; 
+    border-bottom: 1px solid #e9ecef; 
+    font-size: 14px; 
+  }
+  tr:nth-child(even) { 
+    background-color: #C2D5B4 !important; 
+    -webkit-print-color-adjust: exact !important; 
+    print-color-adjust: exact !important;
+  }
+  tr:last-child td { border-bottom: none; }
+  
+  .italic { font-style: italic; color: #384B2A; font-weight: 500; } 
+  .center { text-align: center; font-weight: 700; color: #1a2f23; }
+  
+  .footer { 
+    margin-top: 30px; 
+    padding: 20px;
+    background-color: #C2D5B4 !important; 
+    border: 2px solid #64864B;
+    border-radius: 8px;
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    text-align: right; 
+    color: #1a2f23; 
+    -webkit-print-color-adjust: exact !important; 
+    print-color-adjust: exact !important;
+  }
+
+  .timestamp { 
+    margin-top: 40px; 
+    font-size: 0.8rem; 
+    color: #384B2A; 
+    text-align: center; 
+    opacity: 0.7;
+  }
+</style></head>
+    <body>
+      <h1>${projectTitle}</h1>
+      <table>
+        <thead>
+          <tr><th>Common Name</th><th>Scientific Name</th><th style="text-align:center;">Quantity</th></tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+      <div class="footer">Total Trees & Shrubs: ${totalQty}</div>
+      <div class="timestamp">Generated on ${new Date().toLocaleDateString()}</div>
+    </body></html>`;
+
+  printWindow.document.write(tableHtml);
+  printWindow.document.close();
+  
+  printWindow.focus();
+  setTimeout(() => {
+    printWindow.print();
+  }, 250);
+}
+</script>
+
+<footer class="update-footer">
+  <p>Last Updated: <time id="last-updated"></time></p>
+</footer>
+
+<a href="#top" id="back-to-top">Back to Top ↑</a>
+
+<script>
+  const date = new Date(document.lastModified);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById("last-updated").innerHTML = date.toLocaleDateString('en-CA', options);
+</script>
+</body>
+</html>
