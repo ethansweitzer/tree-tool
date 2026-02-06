@@ -359,7 +359,14 @@ input[type="checkbox"] {
 .help-icon.soil-texture:hover::after {
   background-image: url('Images/soiltexture.jpg');
   width: 550px;
-  height: 380px; 
+  height: 380px;
+  left: 0; 
+  transform: translateX(-15%);
+}
+
+.help-icon.soil-texture:hover::before {
+  left: -3px; 
+  transform: none;
 }
 
 .help-icon.soil-moisture:hover::after {
@@ -369,24 +376,22 @@ input[type="checkbox"] {
 }
 
 @media (max-width: 600px) {
-  .help-icon.has-image:hover::after {
-    /* Break the centering logic that causes left-side cutoff */
-    position: fixed;
-    left: 5vw;
-    right: 5vw;
-    top: 20%;
-    transform: none;
-    width: 90vw;
-    /* Maintain aspect ratio box */
+  .help-icon.soil-texture:hover::after {
+    width: 85vw;
     height: auto;
-    aspect-ratio: 550 / 380; 
-  }
-  
-  .help-icon.soil-moisture:hover::after {
-    aspect-ratio: 550 / 220;
+    aspect-ratio: 550 / 380;
+    left: -20px; 
+    transform: none;
   }
 
-  /* Hide the arrow on mobile as the box is now fixed to screen */
+  .help-icon.soil-moisture:hover::after {
+    width: 85vw;
+    height: auto;
+    aspect-ratio: 550 / 220;
+    left: -20px;
+    transform: none;
+  }
+
   .help-icon.has-image:hover::before {
     display: none;
   }
@@ -1701,7 +1706,7 @@ function exportPlantingPlan() {
           document.removeEventListener("copy", listener);
 
           if (successful) {
-            alert("Table copied! You can now paste directly into Excel or Word with formatting.");
+            alert("Table copied! You can now paste directly into Excel or Word.");
           } else {
             alert("Copy failed. Try selecting the table manually.");
           }
