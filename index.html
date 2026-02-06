@@ -62,7 +62,6 @@ body.fall-active .view-btn {
   outline-color: #A45A2B !important; 
 }
 
-/* Ensure the active button doesn't keep a green glow */
 body.fall-active .view-btn.active {
   border-color: #5D1909 !important;
 }
@@ -693,12 +692,10 @@ function toggleSeason() {
       if (b.classList.contains('active')) {
         b.style.setProperty('background-color', '#8C1C04', 'important');
         b.style.setProperty('color', '#ffffff', 'important');
-        // FIX: Replaces green border with dark fall border
         b.style.setProperty('border-color', '#5D1909', 'important'); 
       } else {
         b.style.setProperty('background-color', '#eee', 'important');
         b.style.setProperty('color', '#333', 'important');
-        // FIX: Replaces green border with neutral gray border
         b.style.setProperty('border-color', '#ccc', 'important'); 
       }
     });
@@ -715,7 +712,6 @@ function toggleSeason() {
     viewBtns.forEach(b => {
       b.style.removeProperty('background-color');
       b.style.removeProperty('color');
-      // FIX: Returns to original stylesheet border (Green)
       b.style.removeProperty('border-color'); 
     });
 
@@ -1711,15 +1707,14 @@ function setView(viewType, btn) {
     document.querySelectorAll('.view-btn.active').forEach(b => {
       b.style.setProperty('background-color', '#8C1C04', 'important');
       b.style.setProperty('color', '#ffffff', 'important');
-      b.style.setProperty('border-color', '#5D1909', 'important'); // Darker rust border
+      b.style.setProperty('border-color', '#5D1909', 'important');
     });
     document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
       b.style.setProperty('background-color', '#eee', 'important');
       b.style.setProperty('color', '#333', 'important');
-      b.style.setProperty('border-color', '#ccc', 'important'); // Standard gray border
+      b.style.setProperty('border-color', '#ccc', 'important');
     });
   } else {
-    // Summer Reset
     document.querySelectorAll('.view-btn.active').forEach(b => {
       b.style.setProperty('background-color', '#4E683B', 'important');
       b.style.setProperty('color', '#ffffff', 'important');
