@@ -429,12 +429,44 @@ summary::-webkit-details-marker {
   color: #333;
 }
 
-/* Optional: Add a subtle icon using a pseudo-element */
 .update-footer p::before {
   content: "📆 ";
   font-size: 1rem;
 }
 
+.star-toggle {
+  cursor: pointer;
+  color: #ccc;
+  font-size: 1.2rem;
+  margin-right: 8px;
+  transition: color 0.2s, transform 0.2s;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.star-toggle.active {
+  color: #FFD700;
+  transform: scale(1.2);
+}
+
+.multiselect label, .filter-item label {
+  display: flex;
+  align-items: center;
+}
+
+.legend-star, .star-toggle.active {
+  color: #FFD700;
+  
+  -webkit-text-stroke: 1px #333; 
+  
+  paint-order: stroke fill;
+  
+  font-size: 1.3rem;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+}
+  
   </style>
 </head>
 
@@ -449,10 +481,18 @@ summary::-webkit-details-marker {
        style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;">
 </div>
 
+<p style="font-size: 0.85rem; color: #555; margin: -10px 0 20px 0; display: flex; align-items: center; gap: 8px;">
+  <span class="legend-star">★</span> 
+  <span>Toggle the star to <strong>require</strong> a match for that category (excludes all partial matches)</span>
+</p>
+
 <div class="filters">
   <!-- Soil Texture -->
   <div class="multiselect">
-    <label>Soil Texture      <span class="help-icon has-image soil-texture" data-tooltip="Loading resource...">?</span>
+    <label>
+	<span class="star-toggle" data-filter="soilTexture" onclick="toggleMandatory(this)">★</span>
+	Soil Texture      
+	<span class="help-icon has-image soil-texture" data-tooltip="Loading resource...">?</span>
   </label>
     <div class="selectBox" onclick="toggleDropdown('textureChecks')">
       <select><option>Select Soil Texture(s)</option></select>
@@ -471,7 +511,10 @@ summary::-webkit-details-marker {
 
   <!-- Soil Moisture -->
   <div class="multiselect">
-    <label>Soil Moisture  <span class="help-icon has-image soil-moisture" data-tooltip="Loading resource...">?</span>
+    <label>
+	<span class="star-toggle" data-filter="soilMoisture" onclick="toggleMandatory(this)">★</span>
+	Soil Moisture  
+	<span class="help-icon has-image soil-moisture" data-tooltip="Loading resource...">?</span>
   </label>
     <div class="selectBox" onclick="toggleDropdown('moistureChecks')">
       <select><option>Select Soil Moisture(s)</option></select>
@@ -487,7 +530,10 @@ summary::-webkit-details-marker {
 
   <!-- CoW -->
   <div class="multiselect">
-    <label>Coefficient of Wetness  <span class="help-icon" data-tooltip="Lowland Species = -5 to -3&#10;Variable Species (found in either environment) = -2 to 2&#10;Upland Species = 3 to 5">?</span>
+    <label>
+	<span class="star-toggle" data-filter="CoW" onclick="toggleMandatory(this)">★</span>
+	Coefficient of Wetness  
+	<span class="help-icon" data-tooltip="Lowland Species = -5 to -3&#10;Variable Species (found in either environment) = -2 to 2&#10;Upland Species = 3 to 5">?</span>
 </label>
     <div class="selectBox" onclick="toggleDropdown('cowChecks')">
       <select><option>Select CoW Class(es)</option></select>
@@ -502,7 +548,10 @@ summary::-webkit-details-marker {
 
   <!-- Sunlight -->
   <div class="multiselect">
-    <label>Sunlight  <span class="help-icon" data-tooltip="Full Sun = more than 6 hours of direct sun per day&#10;Part Shade = 4 to 6 hours of direct sun per day&#10;Shade = less than 4 hours of direct sun per day">?</span>
+    <label>
+	<span class="star-toggle" data-filter="sunlight" onclick="toggleMandatory(this)">★</span>
+	Sunlight  
+	<span class="help-icon" data-tooltip="Full Sun = more than 6 hours of direct sun per day&#10;Part Shade = 4 to 6 hours of direct sun per day&#10;Shade = less than 4 hours of direct sun per day">?</span>
 </label>
     <div class="selectBox" onclick="toggleDropdown('sunlightChecks')">
       <select><option>Select Sunlight Level(s)</option></select>
@@ -517,7 +566,10 @@ summary::-webkit-details-marker {
 
   <!-- Carbonate Presence -->
 <div class="filter-item">
-  <label for="carbonate">Carbonate Presence  <span class="help-icon" data-tooltip="Select the relative carbonate presense based on the reactivity of the ''fizz test''">?</span>
+  <label for="carbonate">
+  <span class="star-toggle" data-filter="carbonate" onclick="toggleMandatory(this)">★</span>
+  Carbonate Presence  
+  <span class="help-icon" data-tooltip="Select the relative carbonate presense based on the reactivity of the ''fizz test''">?</span>
 </label>
   <select id="carbonate" onchange="updateClearButton()">
     <option value="" disabled selected>Select Carbonate Presence</option>
@@ -527,6 +579,20 @@ summary::-webkit-details-marker {
     <option value="High">High</option>
   </select>
 </div>
+
+  <!-- Vendor -->
+  <div class="multiselect">
+    <label>Vendor  <span class="help-icon" data-tooltip="Select one or more vendors to include in your results. Species from unselected vendors will NOT appear in search results as partial matches.">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('vendorChecks')">
+      <select><option>Select Vendor(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="vendorChecks" class="checkboxes">
+      <label><input type="checkbox" name="vendor" value="Hortico">Hortico</label>
+      <label><input type="checkbox" name="vendor" value="Verbinnens">Verbinnen's Nursery</label>
+    </div>
+  </div>
 
   <button onclick="runFilter()">
   Find matching species
@@ -583,6 +649,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/abies_balsamea.jpg"
   },
   {
@@ -593,6 +660,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/acer_nigrum.jpg"
   },
   {
@@ -603,6 +671,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_rubrum.jpg"
   },
   {
@@ -613,6 +682,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_saccharinum.jpg"
   },
   {
@@ -623,6 +693,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_saccharum.jpg"
   },
   {
@@ -633,6 +704,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium", "High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_freemanii.jpg"
   },
   {
@@ -643,6 +715,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
+	vendor: ["Hortico"],
     image: "Images/amelanchier_arborea.jpg"
   },
   {
@@ -653,6 +726,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/amelanchier_laevis.jpg"
   },
   {
@@ -663,6 +737,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/betula_alleghaniensis.jpg"
   },
   {
@@ -673,6 +748,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Verbinnens"],
     image: "Images/betula_lenta.jpg"
   },
   {
@@ -683,6 +759,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/betula_papyrifera.jpg"
   },
   {
@@ -693,6 +770,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/carpinus_caroliniana.jpg"
   },
   {
@@ -703,6 +781,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/carya_cordiformis.jpg"
   },
   {
@@ -713,6 +792,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/carya_ovata.jpg"
   },
   {
@@ -723,6 +803,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/celtis_occidentalis.jpg"
   },
   {
@@ -733,6 +814,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/cercis_canadensis.jpg"
   },
   {
@@ -743,6 +825,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/cornus_alternifolia.jpg"
   },
   {
@@ -753,6 +836,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/crataegus_crus-galli.jpg"
   },
   {
@@ -763,6 +847,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/crataegus_mollis.jpg"
   },
   {
@@ -773,6 +858,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Verbinnens"],
     image: "Images/crataegus_punctata.jpg"
   },
   {
@@ -783,6 +869,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/fagus_grandifolia.jpg"
   },
   {
@@ -793,6 +880,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium"],
+	vendor: ["Verbinnens"],
     image: "Images/gleditsia_triacanthos.jpg"
   },
   {
@@ -803,6 +891,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low", "Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/gymnocladus_dioicus.jpg"
   },
   {
@@ -813,6 +902,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/hamamelis_virginiana.jpg"
   },
   {
@@ -823,6 +913,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/ilex_verticillata.jpg"
   },
   {
@@ -833,6 +924,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun"],
     carbonate: ["None"],
+	vendor: ["Hortico"],
     image: "Images/juglans_cinerea.jpg"
   },
   {
@@ -843,6 +935,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/juglans_nigra.jpg"
   },
   {
@@ -853,6 +946,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/juniperus_virginiana.jpg"
   },
   {
@@ -863,6 +957,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/larix_laricina.jpg"
   },
   {
@@ -873,6 +968,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/liriodendron_tulipifera.jpg"
   },
   {
@@ -883,6 +979,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
+	vendor: ["Verbinnens"],
     image: "Images/nyssa_sylvatica.jpg"
   },
   {
@@ -893,6 +990,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Verbinnens"],
     image: "Images/ostrya_virginiana.jpg"
   },
   {
@@ -903,6 +1001,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/picea_glauca.jpg"
   },
   {
@@ -913,6 +1012,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/pinus_strobus.jpg"
   },
   {
@@ -923,6 +1023,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/platanus_occidentalis.jpg"
   },
   {
@@ -933,6 +1034,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/populus_balsamifera.jpg"
   },
   {
@@ -943,6 +1045,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/populus_deltoides.jpg"
   },
   {
@@ -953,6 +1056,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_grandidentata.jpg"
   },
   {
@@ -963,6 +1067,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_tremuloides.jpg"
   },
   {
@@ -973,6 +1078,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun"],
     carbonate: ["None"],
+	vendor: ["Verbinnens"],
     image: "Images/prunus_pensylvanica.jpg"
   },
   {
@@ -983,6 +1089,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium", "High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/prunus_serotina.jpg"
   },
   {
@@ -993,6 +1100,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/prunus_virginiana.jpg"
   },
   {
@@ -1003,6 +1111,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_alba.jpg"
   },
   {
@@ -1013,6 +1122,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/quercus_bicolor.jpg"
   },
   {
@@ -1023,6 +1133,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_macrocarpa.jpg"
   },
   {
@@ -1033,6 +1144,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_palustris.jpg"
   },
   {
@@ -1043,6 +1155,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_rubra.jpg"
   },
   {
@@ -1053,6 +1166,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/rhus_typhina.jpg"
   },
   {
@@ -1063,6 +1177,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/salix_amygdaloides.jpg"
   },
   {
@@ -1073,6 +1188,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Unknown"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_bebbiana.jpg"
   },
   {
@@ -1083,6 +1199,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
+	vendor: ["Hortico"],
     image: "Images/salix_discolor.jpg"
   },
   {
@@ -1093,6 +1210,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_eriocephala.jpg"
   },
   {
@@ -1103,6 +1221,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico"],
     image: "Images/salix_exigua.jpg"
   },
   {
@@ -1113,6 +1232,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_lucida.jpg"
   },
   {
@@ -1123,6 +1243,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_nigra.jpg"
   },
   {
@@ -1133,6 +1254,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun"],
     carbonate: ["Unknown"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_petiolaris.jpg"
   },
   {
@@ -1143,6 +1265,7 @@ const trees = [
     CoW: ["Lowland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/thuja_occidentalis.jpg"
   },
   {
@@ -1153,6 +1276,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico"],
     image: "Images/tilia_americana.jpg"
   },
   {
@@ -1163,6 +1287,7 @@ const trees = [
     CoW: ["Upland"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["None"],
+	vendor: ["Hortico"],
     image: "Images/tsuga_canadensis.jpg"
   },
   {
@@ -1173,6 +1298,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/ulmus_americana.jpg"
   },
   {
@@ -1183,6 +1309,7 @@ const trees = [
     CoW: ["Variable"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
+	vendor: ["Hortico", "Verbinnens"],
     image: "Images/viburnum_lentago.jpg"
   }
 ];
@@ -1190,6 +1317,20 @@ const trees = [
 /* ============================================================
    FILTERING LOGIC
    ============================================================ */
+let mandatoryFilters = [];
+
+function toggleMandatory(el) {
+  const filterName = el.getAttribute("data-filter");
+  el.classList.toggle("active");
+
+  if (el.classList.contains("active")) {
+    if (!mandatoryFilters.includes(filterName)) {
+      mandatoryFilters.push(filterName);
+    }
+  } else {
+    mandatoryFilters = mandatoryFilters.filter(item => item !== filterName);
+  }
+}
    
 function runFilter() {
   const getChecked = (name) => 
@@ -1200,16 +1341,38 @@ function runFilter() {
     soilMoisture: getChecked("soilMoisture"),
     CoW: getChecked("CoW"),
     sunlight: getChecked("sunlight"),
-    carbonate: document.getElementById("carbonate").value
+    carbonate: document.getElementById("carbonate").value,
+    vendor: getChecked("vendor"),
   };
 
   const carbRank = { "None": 0, "Low": 1, "Medium": 2, "High": 3, "Unknown": 0 };
 
-  const scored = trees.map(tree => {
+  const filteredTrees = trees.filter(tree => {
+    if (filters.vendor.length > 0) {
+      if (!filters.vendor.some(val => tree.vendor.includes(val))) return false;
+    }
+
+    for (let key of mandatoryFilters) {
+      const userSelection = filters[key];
+      if (!userSelection || userSelection.length === 0) continue; 
+
+      if (key === "carbonate") {
+        const treeRanks = Array.isArray(tree.carbonate) ? tree.carbonate.map(val => carbRank[val] || 0) : [carbRank[tree.carbonate] || 0];
+        if (Math.max(...treeRanks) < carbRank[userSelection]) return false;
+      } else {
+        if (!userSelection.some(val => tree[key].includes(val))) return false;
+      }
+    }
+    return true; 
+  });
+
+  const scored = filteredTrees.map(tree => {
     let score = 0;
     let maxScore = 0;
 
     Object.keys(filters).forEach(key => {
+      if (key === "vendor" || mandatoryFilters.includes(key)) return;
+
       const userSelection = filters[key];
       if (key === "carbonate") {
         if (userSelection !== "") {
@@ -1224,6 +1387,7 @@ function runFilter() {
         }
       }
     });
+
     return { tree, score, maxScore, ratio: maxScore > 0 ? score / maxScore : 1 };
   });
 
@@ -1271,7 +1435,7 @@ function renderResults(results, isClearing = false) {
     if (planBtn) planBtn.style.display = "none";
     if (resultsHeader) resultsHeader.style.display = "none";
     if (isClearing && clearBtn) clearBtn.style.display = "none";
-    if (results.length === 0 && !isClearing) container.innerHTML = "<p>No suitable species found.</p>";
+    if (results.length === 0 && !isClearing) container.innerHTML = "<p>No suitable species found. Try unstarring some categories and searching again.</p>";
     return;
   }
 
@@ -1282,6 +1446,7 @@ function renderResults(results, isClearing = false) {
 
 
   const isMiss = (category, treeTraits) => {
+    if (category === "vendor" || mandatoryFilters.includes(category)) return false;
     const checked = (category === "carbonate") 
       ? document.getElementById("carbonate").value 
       : Array.from(document.querySelectorAll(`input[name="${category}"]:checked`)).map(cb => cb.value);
@@ -1324,7 +1489,6 @@ function renderResults(results, isClearing = false) {
       border-bottom: 2px solid ${matchColor}; color: ${matchColor};
       font-size: 1.4rem; font-weight: 800; display: flex;
       justify-content: space-between; align-items: center;
-      /* CSS 'first-of-type' rule handles the margin for the very top header */
     `;
     summary.innerHTML = `<span>${percent}% Match</span><span style="font-size: 0.9rem; font-weight: normal; color: #666;">${groups[percent].length} species found &nbsp; ▾</span>`;
     details.appendChild(summary);
@@ -1354,7 +1518,8 @@ function renderResults(results, isClearing = false) {
             <span ${labelStyle("soilMoisture", tree.soilMoisture)}>Soil Moisture:</span> ${highlightMatches(tree.soilMoisture, "soilMoisture")}<br>
             <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
             <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
-            <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}
+            <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}<br>
+			<span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
           </div>
         </div>
         <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
@@ -1384,7 +1549,13 @@ function updateCounter(categoryName, selectBoxId) {
   const selectBox = document.getElementById(selectBoxId);
   if (!selectBox) return;
   const selectElement = selectBox.parentElement.querySelector('select option');
-  const defaults = { textureChecks: "Select Textures", moistureChecks: "Select Moisture", cowChecks: "Select CoW", sunlightChecks: "Select Sunlight" };
+  const defaults = { 
+    textureChecks: "Select Soil Texture(s)", 
+    moistureChecks: "Select Soil Moisture(s)", 
+    cowChecks: "Select CoW Class(es)", 
+    sunlightChecks: "Select Sunlight Level(s)", 
+    vendorChecks: "Select Vendor(s)" 
+  };
   selectElement.textContent = checkedCount > 0 ? `${checkedCount} Selected` : (defaults[selectBoxId] || "Select Options");
 }
 
@@ -1397,12 +1568,26 @@ document.addEventListener('change', (e) => {
 
 function clearAllFilters() {
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);  
+  
   const carb = document.getElementById("carbonate");
   if (carb) { carb.value = ""; carb.selectedIndex = 0; }
-  ["textureChecks", "moistureChecks", "cowChecks", "sunlightChecks"].forEach(id => {
-    const nameMap = { textureChecks: "soilTexture", moistureChecks: "soilMoisture", cowChecks: "CoW", sunlightChecks: "sunlight" };
+
+  if (typeof mandatoryFilters !== 'undefined') {
+    mandatoryFilters = [];
+    document.querySelectorAll('.star-toggle').forEach(star => star.classList.remove('active'));
+  }
+
+  ["textureChecks", "moistureChecks", "cowChecks", "sunlightChecks", "vendorChecks"].forEach(id => {
+    const nameMap = { 
+      textureChecks: "soilTexture", 
+      moistureChecks: "soilMoisture", 
+      cowChecks: "CoW", 
+      sunlightChecks: "sunlight", 
+      vendorChecks: "vendor" 
+    };
     updateCounter(nameMap[id], id);
   });
+
   renderResults([], true); 
 }
 
