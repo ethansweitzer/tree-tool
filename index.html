@@ -53,6 +53,20 @@ html {
       background: #fdfaf7;
     }
 
+body.fall-active input[type="checkbox"]:checked {
+  accent-color: #8C1C04 !important;
+}
+
+body.fall-active .view-btn { 
+  border-color: #A45A2B !important; 
+  outline-color: #A45A2B !important; 
+}
+
+/* Ensure the active button doesn't keep a green glow */
+body.fall-active .view-btn.active {
+  border-color: #5D1909 !important;
+}
+
 .help-icon {
   display: inline-flex;
   align-items: center;
@@ -499,6 +513,11 @@ summary::-webkit-details-marker {
 </head>
 
 <body>
+<button id="theme-toggle" onclick="toggleSeason()" 
+  style="position: fixed; top: 15px; right: 15px; background: rgba(255,255,255,0.5); border: 1px solid #ccc; border-radius: 50%; width: 55px; height: 55px; font-size: 2rem; cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; line-height: 0; padding: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+  🍂
+</button>
+
 <div class="container">
 <h1>Funded Tree and Shrub Environmental Preference Selector</h1>
 <p>Select multiple site conditions to filter species.</p>
@@ -646,6 +665,63 @@ summary::-webkit-details-marker {
 <div id="results"></div>
 
 <script>
+
+/* ============================================================
+   SEASON STYLE TOGGLE
+   ============================================================ */
+   
+function toggleSeason() {
+  const body = document.body;
+  const btn = document.getElementById('theme-toggle');
+  const container = document.querySelector('.container');
+  
+  body.classList.toggle('fall-active');
+
+  const findBtn = document.querySelector('button[onclick^="runFilter"]');
+  const exportBtn = document.getElementById('planBtn');
+  const viewBtns = document.querySelectorAll('.view-btn');
+
+  if (body.classList.contains('fall-active')) {
+    /* --- FALL THEME --- */
+    body.style.backgroundColor = "#944022"; 
+    if(container) container.style.backgroundColor = "#F2D4AE";
+    
+    if(findBtn) findBtn.style.setProperty('background-color', '#8C1C04', 'important');
+    if(exportBtn) exportBtn.style.setProperty('background-color', '#5D1909', 'important');
+
+    viewBtns.forEach(b => {
+      if (b.classList.contains('active')) {
+        b.style.setProperty('background-color', '#8C1C04', 'important');
+        b.style.setProperty('color', '#ffffff', 'important');
+        // FIX: Replaces green border with dark fall border
+        b.style.setProperty('border-color', '#5D1909', 'important'); 
+      } else {
+        b.style.setProperty('background-color', '#eee', 'important');
+        b.style.setProperty('color', '#333', 'important');
+        // FIX: Replaces green border with neutral gray border
+        b.style.setProperty('border-color', '#ccc', 'important'); 
+      }
+    });
+
+    btn.innerHTML = "🍃";
+  } else {
+    /* --- SUMMER THEME --- */
+    body.style.backgroundColor = "#88AD6D"; 
+    if(container) container.style.backgroundColor = "#EDE4DA";
+    
+    if(findBtn) findBtn.style.setProperty('background-color', '#4E683B', 'important');
+    if(exportBtn) exportBtn.style.setProperty('background-color', '#384B2A', 'important');
+
+    viewBtns.forEach(b => {
+      b.style.removeProperty('background-color');
+      b.style.removeProperty('color');
+      // FIX: Returns to original stylesheet border (Green)
+      b.style.removeProperty('border-color'); 
+    });
+
+    btn.innerHTML = "🍂";
+  }
+}
 
 /* ============================================================
    DROPDOWN CONTROLS
@@ -1630,6 +1706,31 @@ function setView(viewType, btn) {
   document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   container.className = (viewType === 'grid') ? 'grid-view' : '';
+
+  if (document.body.classList.contains('fall-active')) {
+    document.querySelectorAll('.view-btn.active').forEach(b => {
+      b.style.setProperty('background-color', '#8C1C04', 'important');
+      b.style.setProperty('color', '#ffffff', 'important');
+      b.style.setProperty('border-color', '#5D1909', 'important'); // Darker rust border
+    });
+    document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
+      b.style.setProperty('background-color', '#eee', 'important');
+      b.style.setProperty('color', '#333', 'important');
+      b.style.setProperty('border-color', '#ccc', 'important'); // Standard gray border
+    });
+  } else {
+    // Summer Reset
+    document.querySelectorAll('.view-btn.active').forEach(b => {
+      b.style.setProperty('background-color', '#4E683B', 'important');
+      b.style.setProperty('color', '#ffffff', 'important');
+      b.style.setProperty('border-color', '#3d522d', 'important');
+    });
+    document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
+      b.style.removeProperty('background-color');
+      b.style.removeProperty('color');
+      b.style.removeProperty('border-color');
+    });
+  }
 }
 
 function exportPlantingPlan() {
