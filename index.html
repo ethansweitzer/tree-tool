@@ -325,7 +325,6 @@ input[type="checkbox"] {
   top: 160%;           
   left: 50%;
   transform: translateX(-50%);
-  max-width: 85vw;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -333,7 +332,7 @@ input[type="checkbox"] {
   border: 2px solid #555;
   border-radius: 10px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-  z-index: 9999;       
+  z-index: 9999;
 }
 
 .help-icon.has-image:hover::before {
@@ -367,6 +366,30 @@ input[type="checkbox"] {
   background-image: url('Images/soilmoisture.jpg');
   width: 550px;
   height: 220px;
+}
+
+@media (max-width: 600px) {
+  .help-icon.has-image:hover::after {
+    /* Break the centering logic that causes left-side cutoff */
+    position: fixed;
+    left: 5vw;
+    right: 5vw;
+    top: 20%;
+    transform: none;
+    width: 90vw;
+    /* Maintain aspect ratio box */
+    height: auto;
+    aspect-ratio: 550 / 380; 
+  }
+  
+  .help-icon.soil-moisture:hover::after {
+    aspect-ratio: 550 / 220;
+  }
+
+  /* Hide the arrow on mobile as the box is now fixed to screen */
+  .help-icon.has-image:hover::before {
+    display: none;
+  }
 }
 
 .match-group {
@@ -646,7 +669,7 @@ const trees = [
     commonName: "Balsam Fir",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -657,7 +680,7 @@ const trees = [
     commonName: "Black Maple",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -668,7 +691,7 @@ const trees = [
     commonName: "Red Maple",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -679,7 +702,7 @@ const trees = [
     commonName: "Silver Maple",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Fresh", "Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -690,7 +713,7 @@ const trees = [
     commonName: "Sugar Maple",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -701,7 +724,7 @@ const trees = [
     commonName: "Freeman's Maple",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(-2)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium", "High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -712,7 +735,7 @@ const trees = [
     commonName: "Downy Serviceberry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
@@ -723,7 +746,7 @@ const trees = [
     commonName: "Smooth Serviceberry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -734,7 +757,7 @@ const trees = [
     commonName: "Yellow Birch",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -745,7 +768,7 @@ const trees = [
     commonName: "Cherry Birch",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Verbinnens"],
@@ -756,7 +779,7 @@ const trees = [
     commonName: "Paper Birch",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(2)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -767,7 +790,7 @@ const trees = [
     commonName: "Blue-beech",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -778,7 +801,7 @@ const trees = [
     commonName: "Bitternut Hickory",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -789,7 +812,7 @@ const trees = [
     commonName: "Shagbark Hickory",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -800,7 +823,7 @@ const trees = [
     commonName: "Hackberry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -811,7 +834,7 @@ const trees = [
     commonName: "Eastern Redbud",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -822,7 +845,7 @@ const trees = [
     commonName: "Alternateleaf Dogwood",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(5)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -833,7 +856,7 @@ const trees = [
     commonName: "Cockspur Hawthorn",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -844,7 +867,7 @@ const trees = [
     commonName: "Downy Hawthorn",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(-2)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -855,7 +878,7 @@ const trees = [
     commonName: "Dotted Hawthorn",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Verbinnens"],
@@ -866,7 +889,7 @@ const trees = [
     commonName: "American Beech",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -877,7 +900,7 @@ const trees = [
     commonName: "Honeylocust",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Fresh", "Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium"],
 	vendor: ["Verbinnens"],
@@ -888,7 +911,7 @@ const trees = [
     commonName: "Kentucky Coffeetree",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low", "Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -899,7 +922,7 @@ const trees = [
     commonName: "American Witch-hazel",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -910,7 +933,7 @@ const trees = [
     commonName: "Winterberry",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Fresh", "Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -921,7 +944,7 @@ const trees = [
     commonName: "Butternut",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(2)"],
     sunlight: ["Full Sun"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
@@ -932,7 +955,7 @@ const trees = [
     commonName: "Black Walnut",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -943,7 +966,7 @@ const trees = [
     commonName: "Eastern Red Cedar",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -954,7 +977,7 @@ const trees = [
     commonName: "Tamarack",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -965,7 +988,7 @@ const trees = [
     commonName: "Tulip Tree",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(2)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -976,7 +999,7 @@ const trees = [
     commonName: "Black Gum",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
 	vendor: ["Verbinnens"],
@@ -987,7 +1010,7 @@ const trees = [
     commonName: "Ironwood",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Verbinnens"],
@@ -998,7 +1021,7 @@ const trees = [
     commonName: "White Spruce",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1009,7 +1032,7 @@ const trees = [
     commonName: "White Pine",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1020,7 +1043,7 @@ const trees = [
     commonName: "Sycamore",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1031,7 +1054,7 @@ const trees = [
     commonName: "Balsam Poplar",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -1042,7 +1065,7 @@ const trees = [
     commonName: "Eastern Cottonwood",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(-1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -1053,7 +1076,7 @@ const trees = [
     commonName: "Largetooth Aspen",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1064,7 +1087,7 @@ const trees = [
     commonName: "Trembling Aspen",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1075,7 +1098,7 @@ const trees = [
     commonName: "Pin Cherry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(4)"],
     sunlight: ["Full Sun"],
     carbonate: ["None"],
 	vendor: ["Verbinnens"],
@@ -1086,7 +1109,7 @@ const trees = [
     commonName: "Black Cherry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium", "High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1097,7 +1120,7 @@ const trees = [
     commonName: "Chokecherry",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -1108,7 +1131,7 @@ const trees = [
     commonName: "White Oak",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1119,7 +1142,7 @@ const trees = [
     commonName: "Swamp White Oak",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -1130,7 +1153,7 @@ const trees = [
     commonName: "Bur Oak",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1141,7 +1164,7 @@ const trees = [
     commonName: "Pin Oak",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1152,7 +1175,7 @@ const trees = [
     commonName: "Red Oak",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1163,7 +1186,7 @@ const trees = [
     commonName: "Staghorn Sumac",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1174,7 +1197,7 @@ const trees = [
     commonName: "Peachleaf Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -1185,7 +1208,7 @@ const trees = [
     commonName: "Bebb's Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Unknown"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1196,7 +1219,7 @@ const trees = [
     commonName: "Pussy Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
@@ -1207,7 +1230,7 @@ const trees = [
     commonName: "Heart-leaved Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1218,7 +1241,7 @@ const trees = [
     commonName: "Narrowleaf Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-5)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
@@ -1229,7 +1252,7 @@ const trees = [
     commonName: "Shining Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1240,7 +1263,7 @@ const trees = [
     commonName: "Black Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1251,7 +1274,7 @@ const trees = [
     commonName: "Meadow Willow",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun"],
     carbonate: ["Unknown"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1262,7 +1285,7 @@ const trees = [
     commonName: "Eastern White Cedar",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Lowland"],
+    CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1273,7 +1296,7 @@ const trees = [
     commonName: "Basswood",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
@@ -1284,7 +1307,7 @@ const trees = [
     commonName: "Eastern Hemlock",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Upland"],
+    CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
@@ -1295,7 +1318,7 @@ const trees = [
     commonName: "American Elm",
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(-2)"],
     sunlight: ["Full Sun", "Part Shade"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1306,7 +1329,7 @@ const trees = [
     commonName: "Nannyberry",
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
-    CoW: ["Variable"],
+    CoW: ["Variable", "(-1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
@@ -1408,7 +1431,9 @@ function highlightMatches(treeTraits, category) {
   const carbRank = { "None": 0, "Low": 1, "Medium": 2, "High": 3, "Unknown": 0 };
   const siteRank = carbRank[document.getElementById("carbonate").value] || 0;
   
-  return treeTraits.map(trait => {
+  let formattedResult = "";
+
+  treeTraits.forEach((trait, index) => {
     let isMatch = false;
     if (category === "carbonate") {
       isMatch = siteRank > 0 && carbRank[trait] >= siteRank;
@@ -1416,8 +1441,21 @@ function highlightMatches(treeTraits, category) {
       isMatch = checked.includes(trait);
     }
     
-    return isMatch ? `<u style="text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: #2d6a4f;">${trait}</u>` : trait;
-  }).join(", ");
+    const traitHtml = isMatch 
+      ? `<u style="text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: #2d6a4f;">${trait}</u>` 
+      : trait;
+
+    if (index > 0) {
+      if (trait.startsWith("(")) {
+        formattedResult += " "; 
+      } else {
+        formattedResult += ", "; 
+      }
+    }
+    formattedResult += traitHtml;
+  });
+
+  return formattedResult;
 }
 
 function renderResults(results, isClearing = false) {
@@ -1444,7 +1482,6 @@ function renderResults(results, isClearing = false) {
   if (planBtn) planBtn.style.display = "block";
   document.getElementById("resultCount").textContent = `${results.length} species found`;
 
-
   const isMiss = (category, treeTraits) => {
     if (category === "vendor" || mandatoryFilters.includes(category)) return false;
     const checked = (category === "carbonate") 
@@ -1463,7 +1500,6 @@ function renderResults(results, isClearing = false) {
   const labelStyle = (cat, traits) => isMiss(cat, traits) 
     ? `style="color: #ae2012; font-weight: bold; text-decoration: underline; text-decoration-color: #ae2012; text-underline-offset: 3px;"` 
     : `style="font-weight: bold;"`;
-    
 
   const groups = results.reduce((acc, item) => {
     const percent = Math.round(item.ratio * 100);
@@ -1484,18 +1520,12 @@ function renderResults(results, isClearing = false) {
     details.style.gridColumn = "1 / -1"; 
 
     const summary = document.createElement("summary");
-    summary.style = `
-      list-style: none; cursor: pointer; padding: 15px 0;
-      border-bottom: 2px solid ${matchColor}; color: ${matchColor};
-      font-size: 1.4rem; font-weight: 800; display: flex;
-      justify-content: space-between; align-items: center;
-    `;
+    summary.style = `list-style: none; cursor: pointer; padding: 15px 0; border-bottom: 2px solid ${matchColor}; color: ${matchColor}; font-size: 1.4rem; font-weight: 800; display: flex; justify-content: space-between; align-items: center;`;
     summary.innerHTML = `<span>${percent}% Match</span><span style="font-size: 0.9rem; font-weight: normal; color: #666;">${groups[percent].length} species found &nbsp; ▾</span>`;
     details.appendChild(summary);
 
     const listContainer = document.createElement("div");
     listContainer.className = "group-content";
-    
 
     groups[percent].forEach(({ tree, ratio }) => {
       const div = document.createElement("div");
@@ -1519,7 +1549,7 @@ function renderResults(results, isClearing = false) {
             <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
             <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
             <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}<br>
-			<span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
+			      <span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
           </div>
         </div>
         <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
@@ -1539,11 +1569,10 @@ function renderResults(results, isClearing = false) {
     container.appendChild(details);
   });
 }
-
 /* ============================================================
    UTILITIES & EXPORTS
    ============================================================ */
-   
+
 function updateCounter(categoryName, selectBoxId) {
   const checkedCount = document.querySelectorAll(`input[name="${categoryName}"]:checked`).length;
   const selectBox = document.getElementById(selectBoxId);
@@ -1601,137 +1630,88 @@ function setView(viewType, btn) {
 function exportPlantingPlan() {
   const projectTitle = document.getElementById("projectTitle").value || "Planting Plan";
   const selectedTrees = [];
-  let totalQty = 0;
 
   document.querySelectorAll(".tree").forEach(treeDiv => {
-    const isIncluded = treeDiv.querySelector(".plan-include").checked;
-    if (isIncluded) {
+    if (treeDiv.querySelector(".plan-include").checked) {
       const common = treeDiv.querySelector("strong").textContent;
       const latin = treeDiv.querySelector(".latin").textContent;
-      const qty = parseInt(treeDiv.querySelector(".plan-qty").value) || 0;
-      
+      const qty = treeDiv.querySelector(".plan-qty").value;
       selectedTrees.push({ common, latin, qty });
-      totalQty += qty;
     }
   });
 
   if (selectedTrees.length === 0) {
-    alert("Please select at least one species to include in your plan.");
+    alert("Please select species first.");
     return;
   }
 
-  let rowsHtml = "";
-  selectedTrees.forEach(t => {
-    rowsHtml += `<tr>
-      <td>${t.common}</td>
-      <td class="italic">${t.latin}</td>
-      <td class="center">${t.qty}</td>
-    </tr>`;
-  });
-
+  const totalQty = selectedTrees.reduce((sum, t) => sum + parseInt(t.qty || 0), 0);
   const printWindow = window.open('', '_blank');
+  
   let tableHtml = `
-    <html><head><title>${projectTitle}</title>
-    <style>
-  @media print { 
-    @page { margin: 1.5cm; } 
-    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  }
-  body { 
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-    padding: 20px; 
-    color: #1a2f23; 
-    line-height: 1.6;
-    -webkit-print-color-adjust: exact !important; 
-    print-color-adjust: exact !important;
-  }
-  h1 { 
-    color: #384B2A;
-    border-bottom: 4px solid #64864B;
-    padding-bottom: 12px; 
-    margin-bottom: 30px; 
-    font-size: 26px;
-    letter-spacing: -0.5px;
-  }
-  table { 
-    width: 100%; 
-    border-collapse: separate; 
-    border-spacing: 0;
-    margin-top: 10px; 
-    border: 1px solid #C2D5B4; 
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  th { 
-    background-color: #64864B !important; 
-    color: #ffffff !important; 
-    font-weight: 600; 
-    text-transform: uppercase; 
-    font-size: 12px; 
-    letter-spacing: 1px; 
-    padding: 16px 12px; 
-    text-align: left;
-    -webkit-print-color-adjust: exact !important; 
-    print-color-adjust: exact !important;
-  }
-  td { 
-    padding: 14px 12px; 
-    border-bottom: 1px solid #e9ecef; 
-    font-size: 14px; 
-  }
-  tr:nth-child(even) { 
-    background-color: #C2D5B4 !important; 
-    -webkit-print-color-adjust: exact !important; 
-    print-color-adjust: exact !important;
-  }
-  tr:last-child td { border-bottom: none; }
-  
-  .italic { font-style: italic; color: #384B2A; font-weight: 500; } 
-  .center { text-align: center; font-weight: 700; color: #1a2f23; }
-  
-  .footer { 
-    margin-top: 30px; 
-    padding: 20px;
-    background-color: #C2D5B4 !important; 
-    border: 2px solid #64864B;
-    border-radius: 8px;
-    font-size: 1.2rem; 
-    font-weight: bold; 
-    text-align: right; 
-    color: #1a2f23; 
-    -webkit-print-color-adjust: exact !important; 
-    print-color-adjust: exact !important;
-  }
-
-  .timestamp { 
-    margin-top: 40px; 
-    font-size: 0.8rem; 
-    color: #384B2A; 
-    text-align: center; 
-    opacity: 0.7;
-  }
-</style></head>
-    <body>
-      <h1>${projectTitle}</h1>
-      <table>
+    <html>
+    <head>
+      <title>${projectTitle}</title>
+    </head>
+    <body style="font-family: sans-serif; color: #1a2f23; padding: 20px;">
+      <h1 style="color: #384B2A; margin-bottom: 20px;">${projectTitle}</h1>
+      
+      <table id="plan-table" style="width: max-content; min-width: 400px; border-collapse: collapse; border: 1px solid #C2D5B4;">
         <thead>
-          <tr><th>Common Name</th><th>Scientific Name</th><th style="text-align:center;">Quantity</th></tr>
+          <tr style="background-color: #275317; color: #ffffff;">
+            <th style="padding: 12px 10px; text-align: left; border: 0px solid #C2D5B4;">Common Name</th>
+            <th style="padding: 12px 10px; text-align: left; border: 0px solid #C2D5B4;">Scientific Name</th>
+            <th style="padding: 12px 10px; text-align: right; border: 0px solid #C2D5B4;">Quantity</th>
+          </tr>
         </thead>
         <tbody>
-          ${rowsHtml}
+          ${selectedTrees.map((t, i) => `
+            <tr style="background-color: ${i % 2 === 0 ? '#ffffff' : '#daf2d0'};">
+              <td style="padding: 10px; border: 0px solid #e9ecef;">${t.common}</td>
+              <td style="padding: 10px; border: 0px solid #e9ecef; font-style: italic;">${t.latin}</td>
+              <td style="padding: 10px; border: 0px solid #e9ecef; text-align: right;">${t.qty}</td>
+            </tr>
+          `).join('')}
         </tbody>
+        <tfoot>
+          <tr style="background-color: #275317; color: #ffffff; font-weight: bold;">
+            <td colspan="2" style="padding: 12px 10px; border: 0px solid #C2D5B4;">Total Trees & Shrubs:</td>
+            <td style="padding: 12px 10px; text-align: right; border: 0px solid #C2D5B4;">${totalQty}</td>
+          </tr>
+        </tfoot>
       </table>
-      <div class="footer">Total Trees & Shrubs: ${totalQty}</div>
-      <div class="timestamp">Generated on ${new Date().toLocaleDateString()}</div>
-    </body></html>`;
+
+      <button onclick="copyTableOnly()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer; background: #275317; color: white; border: none; border-radius: 4px; font-weight: bold;">
+        Copy Table for Excel/Word
+      </button>
+
+      <script>
+        function copyTableOnly() {
+          const table = document.getElementById("plan-table");
+          if (!table) return;
+
+          const listener = (e) => {
+            e.clipboardData.setData("text/html", table.outerHTML);
+            e.clipboardData.setData("text/plain", table.innerText);
+            e.preventDefault();
+          };
+
+          document.addEventListener("copy", listener);
+          const successful = document.execCommand("copy");
+          document.removeEventListener("copy", listener);
+
+          if (successful) {
+            alert("Table copied! You can now paste directly into Excel or Word with formatting.");
+          } else {
+            alert("Copy failed. Try selecting the table manually.");
+          }
+        }
+      <\/script>
+    </body>
+    </html>`;
 
   printWindow.document.write(tableHtml);
   printWindow.document.close();
-  
-  printWindow.focus();
-  setTimeout(() => {
-    printWindow.print();
-  }, 250);
 }
 </script>
 
