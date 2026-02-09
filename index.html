@@ -369,9 +369,9 @@ input[type="checkbox"] {
     }
 
     .view-controls .view-btn.active {
-      background-color: #558B2F !important;
+      background-color: var(--accent-color) !important;
       color: white !important;
-      border-color: #3d522d;
+      border-color: var(--secondary-accent) !important;
     }
 
 .help-icon.has-image:hover::after {
@@ -779,24 +779,25 @@ function toggleSeason() {
     setTimeout(() => fadeAudio(windSound), 5000); 
   }
 
+  const body = document.body;
+  const btn = document.getElementById('theme-toggle');
+  
   currentSeasonIndex = (currentSeasonIndex + 1) % seasons.length;
   const s = seasons[currentSeasonIndex];
-  const body = document.body;
+  localStorage.setItem('treeSelector_v2', currentSeasonIndex);
 
   body.style.setProperty('--accent-color', s.primary);
   body.style.setProperty('--secondary-accent', s.secondary);
-  body.style.setProperty('--bg-color', s.bg);
-  body.style.setProperty('--container-color', s.container);
+  body.style.setProperty('--body-bg', s.bg);
+  body.style.setProperty('--container-bg', s.container);
 
   body.classList.remove('summer-active', 'fall-active', 'winter-active', 'spring-active');
   body.classList.add(`${s.name}-active`);
-
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.innerHTML = s.icon;
+  body.style.backgroundColor = 'var(--body-bg)';
   
   const container = document.querySelector('.container');
-  if (container) container.style.backgroundColor = 'var(--container-color)';
-  body.style.backgroundColor = 'var(--bg-color)';
+  if (container) container.style.backgroundColor = 'var(--container-bg)';
+  if (btn) btn.innerHTML = s.icon;
 
   document.querySelectorAll('.view-btn').forEach(b => {
     if (b.classList.contains('active')) {
@@ -811,8 +812,6 @@ function toggleSeason() {
   });
 
   createWindGust(s.particles);
-
-  localStorage.setItem('treeSelector_v2', currentSeasonIndex);
 }
 
 function createWindGust(particles) {
@@ -1941,7 +1940,9 @@ function exportPlantingPlan() {
   const date = new Date(document.lastModified);
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById("last-updated").innerHTML = date.toLocaleDateString('en-CA', options);
+</script>
   
+<script>
   (function() {
     const savedIndex = localStorage.getItem('treeSelector_v2');
     if (savedIndex !== null) {
@@ -1953,21 +1954,28 @@ function exportPlantingPlan() {
       body.style.setProperty('--secondary-accent', s.secondary);
       body.style.setProperty('--body-bg', s.bg);
       body.style.setProperty('--container-bg', s.container);
+      
       body.classList.add(`${s.name}-active`);
-      body.style.backgroundColor = s.bg;
+      body.style.backgroundColor = 'var(--body-bg)';
       
       window.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('theme-toggle');
         if (btn) btn.innerHTML = s.icon;
         
         const container = document.querySelector('.container');
-        if (container) container.style.backgroundColor = s.container;
+        if (container) container.style.backgroundColor = 'var(--container-bg)';
 
-        const title = document.getElementById("projectTitleDisplay") || document.querySelector("h1");
-        if (title) title.style.setProperty('color', s.primary, 'important');
-        
-        const backToTop = document.getElementById('back-to-top');
-        if (backToTop) backToTop.style.setProperty('background-color', s.primary, 'important');
+        document.querySelectorAll('.view-btn').forEach(b => {
+          if (b.classList.contains('active')) {
+            b.style.setProperty('background-color', 'var(--accent-color)', 'important');
+            b.style.setProperty('border-color', 'var(--secondary-accent)', 'important');
+            b.style.color = '#ffffff';
+          } else {
+            b.style.setProperty('background-color', '#eee', 'important');
+            b.style.setProperty('border-color', '#ccc', 'important');
+            b.style.setProperty('color', '#333', 'important');
+          }
+        });
       });
     }
   })();
