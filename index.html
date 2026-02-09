@@ -812,7 +812,7 @@ function toggleSeason() {
 
   createWindGust(s.particles);
 
-  localStorage.setItem('savedSeasonIndex', currentSeasonIndex);
+  localStorage.setItem('treeSelector_v2', currentSeasonIndex);
 }
 
 function createWindGust(particles) {
@@ -1942,9 +1942,8 @@ function exportPlantingPlan() {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById("last-updated").innerHTML = date.toLocaleDateString('en-CA', options);
   
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedIndex = localStorage.getItem('treeSelector_savedSeason');
-    
+  (function() {
+    const savedIndex = localStorage.getItem('treeSelector_v2');
     if (savedIndex !== null) {
       currentSeasonIndex = parseInt(savedIndex);
       const s = seasons[currentSeasonIndex];
@@ -1954,24 +1953,24 @@ function exportPlantingPlan() {
       body.style.setProperty('--secondary-accent', s.secondary);
       body.style.setProperty('--body-bg', s.bg);
       body.style.setProperty('--container-bg', s.container);
-
-      body.classList.remove('summer-active', 'fall-active', 'winter-active', 'spring-active');
       body.classList.add(`${s.name}-active`);
-
-      const btn = document.getElementById('theme-toggle');
-      if (btn) btn.innerHTML = s.icon;
+      body.style.backgroundColor = s.bg;
       
-      const container = document.querySelector('.container');
-      if (container) container.style.backgroundColor = 'var(--container-bg)';
-      body.style.backgroundColor = 'var(--body-bg)';
+      window.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.innerHTML = s.icon;
+        
+        const container = document.querySelector('.container');
+        if (container) container.style.backgroundColor = s.container;
 
-      const title = document.getElementById("projectTitleDisplay") || document.querySelector("h1");
-      if (title) title.style.setProperty('color', s.primary, 'important');
-      
-      const backToTop = document.getElementById('back-to-top');
-      if (backToTop) backToTop.style.setProperty('background-color', s.primary, 'important');
+        const title = document.getElementById("projectTitleDisplay") || document.querySelector("h1");
+        if (title) title.style.setProperty('color', s.primary, 'important');
+        
+        const backToTop = document.getElementById('back-to-top');
+        if (backToTop) backToTop.style.setProperty('background-color', s.primary, 'important');
+      });
     }
-  });
+  })();
 </script>
 </body>
 </html>
