@@ -16,14 +16,20 @@ html {
   bottom: 20px;
   right: 20px;
   padding: 10px 15px;
-  background-color: #633663;
+  background-color: var(--accent-color); /* Automatically follows the theme */
+  transition: background-color 0.8s ease;
   color: white;
   text-decoration: none;
   border-radius: 5px;
 }
+
     body {
+	  --accent-color: #558B2F; 
+      --secondary-accent: #33691E;
+      --container-bg: #FDEBD0;
+      --body-bg: #9CCC65;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #88AD6D;
+      background-color: #9CCC65;
       margin: 0;
       padding: 2rem 1rem;
       display: flex;
@@ -31,7 +37,7 @@ html {
     }
 
     .container {
-      background-color: #EDE4DA;
+      background-color: #FDEBD0;
       max-width: 900px;
       width: 100%;
       padding: 2.5rem;
@@ -40,7 +46,12 @@ html {
       line-height: 1.6;
     }
 
-    h1, h2 { margin-top: 0; margin-bottom: 0.5rem; }
+#projectTitleDisplay, h1 {
+  color: var(--accent-color) !important;
+  transition: color 0.8s ease;
+}
+
+    h2 { margin-top: 0; margin-bottom: 0.5rem; }
 
     .filters {
       display: grid;
@@ -53,17 +64,47 @@ html {
       background: #fdfaf7;
     }
 
+input[type="checkbox"]:checked {
+  accent-color: #558B2F !important;
+}
+
 body.fall-active input[type="checkbox"]:checked {
   accent-color: #8C1C04 !important;
 }
 
 body.fall-active .view-btn { 
-  border-color: #A45A2B !important; 
-  outline-color: #A45A2B !important; 
+  border-color: #C25C30 !important; 
+  outline-color: #C25C30 !important; 
 }
 
 body.fall-active .view-btn.active {
-  border-color: #5D1909 !important;
+  border-color: #C25C30 !important;
+}
+
+body.winter-active input[type="checkbox"]:checked {
+  accent-color: #2980B9 !important;
+}
+
+body.winter-active .view-btn { 
+  border-color: #2C3E50 !important; 
+  outline-color: #2C3E50 !important; 
+}
+
+body.winter-active .view-btn.active {
+  border-color: #2C3E50 !important;
+}
+
+body.spring-active input[type="checkbox"]:checked {
+  accent-color: #D43F97 !important;
+}
+
+body.spring-active .view-btn { 
+  border-color: #7BC043 !important; 
+  outline-color: #7BC043 !important; 
+}
+
+body.spring-active .view-btn.active {
+  border-color: #7BC043 !important;
 }
 
 .help-icon {
@@ -197,7 +238,7 @@ body.fall-active .view-btn.active {
     .checkboxes input { margin-right: 10px; }
 
 input[type="checkbox"] {
-  accent-color: #4E683B;
+  accent-color: #558B2F;
 }
 
     label { font-weight: 600; display: block; margin-bottom: 4px; }
@@ -208,7 +249,7 @@ input[type="checkbox"] {
       font-size: 1rem;
 	  font-weight: bold;
       cursor: pointer;
-      background-color: #4E683B;
+      background-color: #558B2F;
       color: white;
       border: none;
       border-radius: 4px;
@@ -225,7 +266,7 @@ input[type="checkbox"] {
       align-items: start;
       gap: 2rem;
       padding: 1.5rem 0;
-      border-bottom: 2px solid #D9C6B0;
+      border-bottom: 2px solid var(--secondary-accent, #BDBDBD) !important;
       transition: all 0.2s ease;
     }
 
@@ -294,7 +335,7 @@ input[type="checkbox"] {
       flex-direction: column;
       align-items: center;
       text-align: center;
-      border: 1px solid #D9C6B0;
+      border: 1px solid var(--secondary-accent, #BDBDBD) !important;
       padding: 10px;
       cursor: pointer;
       gap: 0.5rem;
@@ -327,7 +368,7 @@ input[type="checkbox"] {
     }
 
     .view-controls .view-btn.active {
-      background-color: #4E683B !important;
+      background-color: #558B2F !important;
       color: white !important;
       border-color: #3d522d;
     }
@@ -440,7 +481,7 @@ input[type="checkbox"] {
 }
 
 #results:not(.grid-view) .tree {
-  border-bottom: 2px solid #D9C6B0 !important;
+  border-bottom: 2px solid var(--secondary-accent, #BDBDBD) !important;
 }
 
 summary::-webkit-details-marker {
@@ -512,30 +553,48 @@ summary::-webkit-details-marker {
   position: fixed;
   pointer-events: none;
   z-index: 10000;
-  animation: windSweep linear forwards;
+  animation: windSweep linear forwards, wobble ease-in-out infinite;
   filter: drop-shadow(0 0 2px rgba(0,0,0,0.1)); 
+  transition: filter 0.3s ease;
+}
+
+body.winter-active .leaf-particle {
+  color: #ffffff !important;
+  filter: grayscale(100%) brightness(10) !important;
+}
+
+body.spring-active .leaf-particle {
+  color: #FF69B4 !important;
+  filter: grayscale(100%) sepia(1) saturate(15) hue-rotate(295deg) brightness(1.0) !important;
 }
 
 @keyframes windSweep {
-  0% {
-    transform: translate(-10vw, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(120vw, 30vh) rotate(720deg);
-    opacity: 0;
-  }
+  0% { transform: translate(-10vw, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(120vw, 30vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes wobble {
+  0%, 100% { margin-top: 0px; }
+  50% { margin-top: -30px; }
 }
 
 body, .container, button, .view-btn {
   transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
               border-color 0.8s ease !important;
+}
+
+input[type="checkbox"]:checked {
+  accent-color: var(--accent-color);
+}
+
+button[onclick^="runFilter"] {
+  background-color: var(--accent-color) !important;
+}
+
+#planBtn {
+  background-color: var(--secondary-accent) !important;
 }
   </style>
 </head>
@@ -675,7 +734,7 @@ body, .container, button, .view-btn {
   <button id="clearBtn" onclick="clearAllFilters()" style="display: none; background-color: #666;">
   Clear All Filters
 </button>
-<button id="planBtn" onclick="exportPlantingPlan()" style="display: none; background-color: #384B2A;">
+<button id="planBtn" onclick="exportPlantingPlan()" style="display: none; background-color: #33691E;">
   Export Selection as Planting Plan
 </button>
 
@@ -698,64 +757,59 @@ body, .container, button, .view-btn {
    SEASON STYLE TOGGLE
    ============================================================ */
 let fadeInterval;
-
 const windSound = new Audio("Audio/wind.mp3"); 
 windSound.volume = 0.075;
-   
+
+let currentSeasonIndex = 0;
+const seasons = [
+  { name: 'summer', icon: '🍂', bg: '#9CCC65', container: '#FDEBD0', primary: '#558B2F', secondary: '#33691E', particles: ['🍃', '🌿', '🌸'] },
+  { name: 'fall', icon: '❄️', bg: '#944022', container: '#F2D4AE', primary: '#C25C30', secondary: '#963F1A', particles: ['🍂', '🍁', '🍂'] },
+  { name: 'winter', icon: '🌸', bg: '#2C3E50', container: '#ECF0F1', primary: '#2980B9', secondary: '#1F618D', particles: ['❄️', '❅', '✶', '₊', '⊹'] },
+  { name: 'spring', icon: '🍃', bg: '#F7C3E2', container: '#D3F2B3', primary: '#DE6FB1', secondary: '#B84489', particles: ['🌸', '𓇢', '࿔', '🍂', '𓄼', '𓄹'] }
+];
+
 function toggleSeason() {
   clearInterval(fadeInterval);
-  
   if (windSound) {
     windSound.pause();
     windSound.currentTime = 0;
     windSound.volume = 0.075;
-    windSound.play().catch(e => console.log("Playback error:", e));  
+    windSound.play().catch(e => console.log("Audio blocked"));  
     setTimeout(() => fadeAudio(windSound), 5000); 
   }
-  
+
+  currentSeasonIndex = (currentSeasonIndex + 1) % seasons.length;
+  const s = seasons[currentSeasonIndex];
   const body = document.body;
+
+  body.style.setProperty('--accent-color', s.primary);
+  body.style.setProperty('--secondary-accent', s.secondary);
+  body.style.setProperty('--bg-color', s.bg);
+  body.style.setProperty('--container-color', s.container);
+
+  body.classList.remove('summer-active', 'fall-active', 'winter-active', 'spring-active');
+  body.classList.add(`${s.name}-active`);
+
   const btn = document.getElementById('theme-toggle');
-  const container = document.querySelector('.container');
-
-  body.classList.toggle('fall-active');
+  if (btn) btn.innerHTML = s.icon;
   
-  createWindGust(body.classList.contains('fall-active') ? ['🍂', '🍁', '🍂'] : ['🍃', '🌿', '🌸']);
+  const container = document.querySelector('.container');
+  if (container) container.style.backgroundColor = 'var(--container-color)';
+  body.style.backgroundColor = 'var(--bg-color)';
 
-  const findBtn = document.querySelector('button[onclick^="runFilter"]');
-  const exportBtn = document.getElementById('planBtn');
-  const viewBtns = document.querySelectorAll('.view-btn');
+  document.querySelectorAll('.view-btn').forEach(b => {
+    if (b.classList.contains('active')) {
+      b.style.setProperty('background-color', 'var(--accent-color)', 'important');
+      b.style.setProperty('border-color', 'var(--secondary-accent)', 'important');
+      b.style.color = '#ffffff';
+    } else {
+      b.style.setProperty('background-color', '#eee', 'important');
+      b.style.setProperty('border-color', '#ccc', 'important');
+      b.style.color = '#333';
+    }
+  });
 
-  if (body.classList.contains('fall-active')) {
-    body.style.backgroundColor = "#944022"; 
-    if(container) container.style.backgroundColor = "#F2D4AE";
-    if(findBtn) findBtn.style.setProperty('background-color', '#8C1C04', 'important');
-    if(exportBtn) exportBtn.style.setProperty('background-color', '#5D1909', 'important');
-
-    viewBtns.forEach(b => {
-      if (b.classList.contains('active')) {
-        b.style.setProperty('background-color', '#8C1C04', 'important');
-        b.style.setProperty('color', '#ffffff', 'important');
-        b.style.setProperty('border-color', '#5D1909', 'important');
-      } else {
-        b.style.setProperty('background-color', '#eee', 'important');
-        b.style.setProperty('color', '#333', 'important');
-        b.style.setProperty('border-color', '#ccc', 'important');
-      }
-    });
-    btn.innerHTML = "🍃";
-  } else {
-    body.style.backgroundColor = "#88AD6D"; 
-    if(container) container.style.backgroundColor = "#EDE4DA";
-    if(findBtn) findBtn.style.setProperty('background-color', '#4E683B', 'important');
-    if(exportBtn) exportBtn.style.setProperty('background-color', '#384B2A', 'important');
-
-    viewBtns.forEach(b => {
-      b.style.removeProperty('background-color');
-      b.style.removeProperty('color');
-      b.style.removeProperty('border-color');
-    });
-    btn.innerHTML = "🍂";
-  }
+  createWindGust(s.particles);
 }
 
 function createWindGust(particles) {
@@ -764,18 +818,13 @@ function createWindGust(particles) {
       const leaf = document.createElement('div');
       leaf.className = 'leaf-particle';
       leaf.innerHTML = particles[Math.floor(Math.random() * particles.length)];
-      
       leaf.style.left = "-10vw"; 
       leaf.style.top = (Math.random() * 110 - 20) + "vh"; 
-      
-      const duration = (Math.random() * 3 + 3); 
-      leaf.style.animationDuration = duration + "s";
-      
+      const duration = (Math.random() * 2 + 3); 
+      leaf.style.animationDuration = `${duration}s, ${Math.random() * 0.5 + 2}s`; 
       leaf.style.opacity = "1";
       leaf.style.fontSize = (Math.random() * 1.2 + 1) + "rem";
-
       document.body.appendChild(leaf);
-
       setTimeout(() => leaf.remove(), 8000);
     }, i * 45); 
   }
@@ -783,7 +832,6 @@ function createWindGust(particles) {
 
 function fadeAudio(audio) {
   if (!audio || audio.paused) return;
-
   fadeInterval = setInterval(() => {
     if (audio.volume > 0.007) {
       audio.volume -= 0.007;
@@ -1779,29 +1827,17 @@ function setView(viewType, btn) {
   btn.classList.add('active');
   container.className = (viewType === 'grid') ? 'grid-view' : '';
 
-  if (document.body.classList.contains('fall-active')) {
-    document.querySelectorAll('.view-btn.active').forEach(b => {
-      b.style.setProperty('background-color', '#8C1C04', 'important');
-      b.style.setProperty('color', '#ffffff', 'important');
-      b.style.setProperty('border-color', '#5D1909', 'important');
-    });
-    document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
-      b.style.setProperty('background-color', '#eee', 'important');
-      b.style.setProperty('color', '#333', 'important');
-      b.style.setProperty('border-color', '#ccc', 'important');
-    });
-  } else {
-    document.querySelectorAll('.view-btn.active').forEach(b => {
-      b.style.setProperty('background-color', '#4E683B', 'important');
-      b.style.setProperty('color', '#ffffff', 'important');
-      b.style.setProperty('border-color', '#3d522d', 'important');
-    });
-    document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
-      b.style.removeProperty('background-color');
-      b.style.removeProperty('color');
-      b.style.removeProperty('border-color');
-    });
-  }
+  const s = seasons[currentSeasonIndex];
+  document.querySelectorAll('.view-btn.active').forEach(b => {
+    b.style.setProperty('background-color', s.primary, 'important');
+    b.style.setProperty('color', '#ffffff', 'important');
+    b.style.setProperty('border-color', s.secondary, 'important');
+  });
+  document.querySelectorAll('.view-btn:not(.active)').forEach(b => {
+    b.style.setProperty('background-color', '#eee', 'important');
+    b.style.setProperty('color', '#333', 'important');
+    b.style.setProperty('border-color', '#ccc', 'important');
+  });
 }
 
 function exportPlantingPlan() {
@@ -1905,4 +1941,3 @@ function exportPlantingPlan() {
 </script>
 </body>
 </html>
-
