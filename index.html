@@ -508,6 +508,35 @@ summary::-webkit-details-marker {
   vertical-align: middle;
 }
   
+.leaf-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  animation: windSweep linear forwards;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.1)); 
+}
+
+@keyframes windSweep {
+  0% {
+    transform: translate(-10vw, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(120vw, 30vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+body, .container, button, .view-btn {
+  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.8s ease !important;
+}
   </style>
 </head>
 
@@ -668,23 +697,37 @@ summary::-webkit-details-marker {
 /* ============================================================
    SEASON STYLE TOGGLE
    ============================================================ */
+let fadeInterval;
+
+const windSound = new Audio("Audio/wind.mp3"); 
+windSound.volume = 0.075;
    
 function toggleSeason() {
+  clearInterval(fadeInterval);
+  
+  if (windSound) {
+    windSound.pause();
+    windSound.currentTime = 0;
+    windSound.volume = 0.075;
+    windSound.play().catch(e => console.log("Playback error:", e));  
+    setTimeout(() => fadeAudio(windSound), 5000); 
+  }
+  
   const body = document.body;
   const btn = document.getElementById('theme-toggle');
   const container = document.querySelector('.container');
-  
+
   body.classList.toggle('fall-active');
+  
+  createWindGust(body.classList.contains('fall-active') ? ['🍂', '🍁', '🍂'] : ['🍃', '🌿', '🌸']);
 
   const findBtn = document.querySelector('button[onclick^="runFilter"]');
   const exportBtn = document.getElementById('planBtn');
   const viewBtns = document.querySelectorAll('.view-btn');
 
   if (body.classList.contains('fall-active')) {
-    /* --- FALL THEME --- */
     body.style.backgroundColor = "#944022"; 
     if(container) container.style.backgroundColor = "#F2D4AE";
-    
     if(findBtn) findBtn.style.setProperty('background-color', '#8C1C04', 'important');
     if(exportBtn) exportBtn.style.setProperty('background-color', '#5D1909', 'important');
 
@@ -692,31 +735,64 @@ function toggleSeason() {
       if (b.classList.contains('active')) {
         b.style.setProperty('background-color', '#8C1C04', 'important');
         b.style.setProperty('color', '#ffffff', 'important');
-        b.style.setProperty('border-color', '#5D1909', 'important'); 
+        b.style.setProperty('border-color', '#5D1909', 'important');
       } else {
         b.style.setProperty('background-color', '#eee', 'important');
         b.style.setProperty('color', '#333', 'important');
-        b.style.setProperty('border-color', '#ccc', 'important'); 
+        b.style.setProperty('border-color', '#ccc', 'important');
       }
     });
-
-    btn.innerHTML = "🍃";
+    btn.innerHTML = "🍂";
   } else {
-    /* --- SUMMER THEME --- */
     body.style.backgroundColor = "#88AD6D"; 
     if(container) container.style.backgroundColor = "#EDE4DA";
-    
     if(findBtn) findBtn.style.setProperty('background-color', '#4E683B', 'important');
     if(exportBtn) exportBtn.style.setProperty('background-color', '#384B2A', 'important');
 
     viewBtns.forEach(b => {
       b.style.removeProperty('background-color');
       b.style.removeProperty('color');
-      b.style.removeProperty('border-color'); 
+      b.style.removeProperty('border-color');
     });
-
-    btn.innerHTML = "🍂";
+    btn.innerHTML = "🍃";
   }
+}
+
+function createWindGust(particles) {
+  for (let i = 0; i < 45; i++) {
+    setTimeout(() => {
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf-particle';
+      leaf.innerHTML = particles[Math.floor(Math.random() * particles.length)];
+      
+      leaf.style.left = "-10vw"; 
+      leaf.style.top = (Math.random() * 110 - 20) + "vh"; 
+      
+      const duration = (Math.random() * 3 + 3); 
+      leaf.style.animationDuration = duration + "s";
+      
+      leaf.style.opacity = "1";
+      leaf.style.fontSize = (Math.random() * 1.2 + 1) + "rem";
+
+      document.body.appendChild(leaf);
+
+      setTimeout(() => leaf.remove(), 8000);
+    }, i * 45); 
+  }
+}
+
+function fadeAudio(audio) {
+  if (!audio || audio.paused) return;
+
+  fadeInterval = setInterval(() => {
+    if (audio.volume > 0.007) {
+      audio.volume -= 0.007;
+    } else {
+      audio.volume = 0;
+      audio.pause();
+      clearInterval(fadeInterval);
+    }
+  }, 200); 
 }
 
 /* ============================================================
