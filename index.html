@@ -415,8 +415,8 @@ input[type="checkbox"] {
   background-image: url('Images/soiltexture.jpg');
   width: 550px;
   height: 380px;
-  left: 0; 
-  transform: translateX(-15%);
+  right: 0; 
+  transform: translateX(-72%);
 }
 
 .help-icon.soil-texture:hover::before {
@@ -428,6 +428,8 @@ input[type="checkbox"] {
   background-image: url('Images/soilmoisture.jpg');
   width: 550px;
   height: 220px;
+  left: 0; 
+  transform: translateX(-25%);
 }
 
 @media (max-width: 600px) {
@@ -622,6 +624,42 @@ button[onclick^="runFilter"] {
 </p>
 
 <div class="filters">
+
+  <!-- Vendor -->
+  <div class="multiselect">
+    <label>Vendor  <span class="help-icon" data-tooltip="Select one or more vendors to include in your results. Species from unselected vendors will NOT appear in search results as partial matches.">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('vendorChecks')">
+      <select><option>Select Vendor(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="vendorChecks" class="checkboxes">
+      <label><input type="checkbox" name="vendor" value="Hortico">Hortico</label>
+      <label><input type="checkbox" name="vendor" value="Verbinnens">Verbinnen's Nursery</label>
+    </div>
+  </div>
+
+  <!-- Benefits -->
+  <div class="multiselect">
+    <label>
+	<span class="star-toggle" data-filter="benefits" onclick="toggleMandatory(this)">★</span>
+	Benefits  
+	<span class="help-icon" data-tooltip="Evergreen = retains its leafs/needles year round, winter interest&#10;&#10;Flowers = produce very conspicuous flowers, visually appealing&#10;&#10;Fragrant = produce a noticeable pleasant smell, sometimes only notably when touched or in close proximity&#10;&#10;Fruit = produce noticable fruit, variable kinds (seed pods, pommes, berries, etc.)&#10;&#10;Nuts = species produce nuts that are beneficial to many species of wildlife, or even humans&#10;&#10;Showy = very visually attractive species, sometimes for their flowers, or autumn foliage, or winter interests like retained berries">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('benefitsChecks')">
+      <select><option>Select Benefit(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="benefitsChecks" class="checkboxes">
+      <label><input type="checkbox" name="benefits" value="Evergreen">Evergreen</label>
+      <label><input type="checkbox" name="benefits" value="Flowers">Flowers️</label>
+      <label><input type="checkbox" name="benefits" value="Fragrant">Fragrant</label>
+	  <label><input type="checkbox" name="benefits" value="Fruit">Fruit</label>
+      <label><input type="checkbox" name="benefits" value="Nuts">Nuts</label>
+      <label><input type="checkbox" name="benefits" value="Showy">Showy</label>
+    </div>
+  </div>
+
   <!-- Soil Texture -->
   <div class="multiselect">
     <label>
@@ -668,7 +706,7 @@ button[onclick^="runFilter"] {
     <label>
 	<span class="star-toggle" data-filter="CoW" onclick="toggleMandatory(this)">★</span>
 	Coefficient of Wetness  
-	<span class="help-icon" data-tooltip="Lowland Species = -5 to -3&#10;Variable Species (found in either environment) = -2 to 2&#10;Upland Species = 3 to 5">?</span>
+	<span class="help-icon" data-tooltip="Lowland Species = -5 to -3&#10;&#10;Variable Species (found in either environment) = -2 to 2&#10;&#10;Upland Species = 3 to 5">?</span>
 </label>
     <div class="selectBox" onclick="toggleDropdown('cowChecks')">
       <select><option>Select CoW Class(es)</option></select>
@@ -678,24 +716,6 @@ button[onclick^="runFilter"] {
       <label><input type="checkbox" name="CoW" value="Lowland">Lowland (-5 to -3)</label>
       <label><input type="checkbox" name="CoW" value="Variable">Variable (-2 to 2)</label>
       <label><input type="checkbox" name="CoW" value="Upland">Upland (2 to 5)</label>
-    </div>
-  </div>
-
-  <!-- Sunlight -->
-  <div class="multiselect">
-    <label>
-	<span class="star-toggle" data-filter="sunlight" onclick="toggleMandatory(this)">★</span>
-	Sunlight  
-	<span class="help-icon" data-tooltip="Full Sun = more than 6 hours of direct sun per day&#10;Part Shade = 4 to 6 hours of direct sun per day&#10;Shade = less than 4 hours of direct sun per day">?</span>
-</label>
-    <div class="selectBox" onclick="toggleDropdown('sunlightChecks')">
-      <select><option>Select Sunlight Level(s)</option></select>
-      <div class="overSelect"></div>
-    </div>
-    <div id="sunlightChecks" class="checkboxes">
-      <label><input type="checkbox" name="sunlight" value="Full Sun">Full Sun ☀️</label>
-      <label><input type="checkbox" name="sunlight" value="Part Shade">Part Shade 🌤️</label>
-      <label><input type="checkbox" name="sunlight" value="Shade">Shade ☁️</label>
     </div>
   </div>
 
@@ -715,19 +735,60 @@ button[onclick^="runFilter"] {
   </select>
 </div>
 
-  <!-- Vendor -->
+  <!-- Sunlight -->
   <div class="multiselect">
-    <label>Vendor  <span class="help-icon" data-tooltip="Select one or more vendors to include in your results. Species from unselected vendors will NOT appear in search results as partial matches.">?</span>
+    <label>
+	<span class="star-toggle" data-filter="sunlight" onclick="toggleMandatory(this)">★</span>
+	Sunlight  
+	<span class="help-icon" data-tooltip="Full Sun = more than 6 hours of direct sun per day&#10;&#10;Part Shade = 4 to 6 hours of direct sun per day&#10;&#10;Shade = less than 4 hours of direct sun per day">?</span>
 </label>
-    <div class="selectBox" onclick="toggleDropdown('vendorChecks')">
-      <select><option>Select Vendor(s)</option></select>
+    <div class="selectBox" onclick="toggleDropdown('sunlightChecks')">
+      <select><option>Select Sunlight Level(s)</option></select>
       <div class="overSelect"></div>
     </div>
-    <div id="vendorChecks" class="checkboxes">
-      <label><input type="checkbox" name="vendor" value="Hortico">Hortico</label>
-      <label><input type="checkbox" name="vendor" value="Verbinnens">Verbinnen's Nursery</label>
+    <div id="sunlightChecks" class="checkboxes">
+      <label><input type="checkbox" name="sunlight" value="Full Sun">Full Sun ☀️</label>
+      <label><input type="checkbox" name="sunlight" value="Part Shade">Part Shade 🌤️</label>
+      <label><input type="checkbox" name="sunlight" value="Shade">Shade ☁️</label>
     </div>
   </div>
+
+  <!-- Successional Stage  -->
+  <div class="multiselect">
+    <label>
+	<span class="star-toggle" data-filter="successionstage" onclick="toggleMandatory(this)">★</span>
+	Successional Stage  
+	<span class="help-icon" data-tooltip="Based upon a species' shade tolerance / intolerance, lifespan, and their appearance in mature forests&#10;&#10;Climax = often slower growing, very long lived, and very shade tolerant, the species that will eventually overtake the intermediate species in the canopy if the forest continues to develop, or will be present in the shaded understory&#10;&#10;Intermediate = fairly long lived, often fast growing, intermediately shade tolerant, commonly present in mature forests&#10;&#10;Pioneer = typically short lived, fast growing, and entirely shade intolerant">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('successionstageChecks')">
+      <select><option>Select Successional Stage(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="successionstageChecks" class="checkboxes">
+      <label><input type="checkbox" name="successionstage" value="Climax">Climax</label>
+      <label><input type="checkbox" name="successionstage" value="Intermediate">Intermediate</label>
+      <label><input type="checkbox" name="successionstage" value="Pioneer">Pioneer</label>
+    </div>
+  </div>
+  
+    <!-- Canopy Layer  -->
+  <div class="multiselect">
+    <label>
+	<span class="star-toggle" data-filter="canopylayer" onclick="toggleMandatory(this)">★</span>
+	Canopy Layer  
+	<span class="help-icon" data-tooltip="Canopy = The highest layer of the forest, made up of the crowns of the tallest trees and receives the most sunlight of any layer&#10;&#10;Subcanopy = The layer directly below the canopy, receiving filtered light through the crowns of the canopy trees, often younger shade tolerant trees waiting for a gap in the canopy to grow into&#10;&#10;Understory = The layer of vegetation stretching from just below the subcanopy to near the forest floor, often shade tolerant shrub species and young trees.">?</span>
+</label>
+    <div class="selectBox" onclick="toggleDropdown('canopylayerChecks')">
+      <select><option>Select Canopy Layer(s)</option></select>
+      <div class="overSelect"></div>
+    </div>
+    <div id="canopylayerChecks" class="checkboxes">
+      <label><input type="checkbox" name="canopylayer" value="Canopy">Canopy️</label>
+      <label><input type="checkbox" name="canopylayer" value="Subcanopy">Subcanopy️</label>
+      <label><input type="checkbox" name="canopylayer" value="Understory">Understory</label>
+    </div>
+  </div>
+
 
   <button onclick="runFilter()">
   Find matching species
@@ -874,6 +935,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Evergreen", "Fragrant", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/abies_balsamea.jpg"
@@ -885,6 +949,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/acer_nigrum.jpg"
@@ -895,7 +962,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Full Sun", "Part Shade"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_rubrum.jpg"
@@ -907,6 +977,9 @@ const trees = [
     soilMoisture: ["Fresh", "Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_saccharinum.jpg"
@@ -918,6 +991,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_saccharum.jpg"
@@ -928,7 +1004,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
     CoW: ["Variable", "(-2)"],
-    sunlight: ["Full Sun", "Part Shade"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium", "High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_freemanii.jpg"
@@ -940,6 +1019,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
     image: "Images/amelanchier_arborea.jpg"
@@ -951,6 +1033,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/amelanchier_laevis.jpg"
@@ -961,7 +1046,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fruit", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/asimina_triloba.jpg"
@@ -972,7 +1060,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy", "Subcanopy"],
+	benefits: ["Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/betula_alleghaniensis.jpg"
@@ -983,7 +1074,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
-    sunlight: ["Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Fragrant", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Verbinnens"],
     image: "Images/betula_lenta.jpg"
@@ -994,7 +1088,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(2)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/betula_papyrifera.jpg"
@@ -1006,6 +1103,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(0)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/carpinus_caroliniana.jpg"
@@ -1016,7 +1116,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/carya_cordiformis.jpg"
@@ -1028,6 +1131,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/carya_ovata.jpg"
@@ -1039,6 +1145,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy", "Subcanopy"],
+	benefits: ["Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/celtis_occidentalis.jpg"
@@ -1049,7 +1158,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
-    sunlight: ["Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/cercis_canadensis.jpg"
@@ -1061,6 +1173,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(5)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/cornus_alternifolia.jpg"
@@ -1072,6 +1187,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(4)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fruit", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/cornus_florida.jpg"
@@ -1082,7 +1200,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/crataegus_crus-galli.jpg"
@@ -1093,7 +1214,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Variable", "(-2)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/crataegus_mollis.jpg"
@@ -1104,7 +1228,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(5)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Verbinnens"],
     image: "Images/crataegus_punctata.jpg"
@@ -1116,6 +1243,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/fagus_grandifolia.jpg"
@@ -1127,6 +1257,9 @@ const trees = [
     soilMoisture: ["Fresh", "Moist"],
     CoW: ["Variable", "(0)"],
     sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Fragrant", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/gleditsia_triacanthos.jpg"
@@ -1137,7 +1270,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(5)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Fragrant", "Showy"],
     carbonate: ["Low", "Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/gymnocladus_dioicus.jpg"
@@ -1149,6 +1285,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/hamamelis_virginiana.jpg"
@@ -1160,6 +1299,9 @@ const trees = [
     soilMoisture: ["Fresh", "Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Understory"],
+	benefits: ["Fruit", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/ilex_verticillata.jpg"
@@ -1171,6 +1313,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(2)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
     image: "Images/juglans_cinerea.jpg"
@@ -1182,6 +1327,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/juglans_nigra.jpg"
@@ -1192,7 +1340,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry"],
     CoW: ["Upland", "(3)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Evergreen", "Fragrant", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/juniperus_virginiana.jpg"
@@ -1203,7 +1354,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/larix_laricina.jpg"
@@ -1214,7 +1368,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(2)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/liriodendron_tulipifera.jpg"
@@ -1226,6 +1383,9 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/nyssa_sylvatica.jpg"
@@ -1237,6 +1397,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Subcanopy️"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/ostrya_virginiana.jpg"
@@ -1248,6 +1411,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy", "Subcanopy"],
+	benefits: ["Evergreen", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/picea_glauca.jpg"
@@ -1259,6 +1425,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Evergreen", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/pinus_strobus.jpg"
@@ -1269,7 +1438,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Moist"],
     CoW: ["Lowland", "(-3)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Fruit", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/platanus_occidentalis.jpg"
@@ -1281,6 +1453,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Fragrant", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/populus_balsamifera.jpg"
@@ -1291,7 +1466,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
     CoW: ["Variable", "(-1)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/populus_deltoides.jpg"
@@ -1303,6 +1481,9 @@ const trees = [
     soilMoisture: ["Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_grandidentata.jpg"
@@ -1313,7 +1494,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
     CoW: ["Variable", "(0)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_tremuloides.jpg"
@@ -1325,6 +1509,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(5)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/prunus_americana.jpg"
@@ -1336,6 +1523,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(4)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/prunus_pensylvanica.jpg"
@@ -1346,7 +1536,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["Medium", "High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/prunus_serotina.jpg"
@@ -1358,6 +1551,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Subcanopy", "Understory"],
+	benefits: ["Flowers", "Fragrant", "Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/prunus_virginiana.jpg"
@@ -1369,6 +1565,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_alba.jpg"
@@ -1380,6 +1579,9 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/quercus_bicolor.jpg"
@@ -1391,6 +1593,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist", "Wet"],
     CoW: ["Variable", "(1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_macrocarpa.jpg"
@@ -1402,6 +1607,9 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_palustris.jpg"
@@ -1413,6 +1621,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Nuts", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/quercus_rubra.jpg"
@@ -1423,7 +1634,10 @@ const trees = [
     soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry"],
     CoW: ["Upland", "(5)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Fruit", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/rhus_typhina.jpg"
@@ -1434,7 +1648,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/salix_amygdaloides.jpg"
@@ -1445,8 +1662,11 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
-    carbonate: ["Unknown"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Showy"],
+    carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_bebbiana.jpg"
   },
@@ -1457,6 +1677,9 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Subcanopy"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/salix_discolor.jpg"
@@ -1468,6 +1691,9 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Understory"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_eriocephala.jpg"
@@ -1478,7 +1704,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-5)"],
-    sunlight: ["Full Sun", "Part Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Understory"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/salix_exigua.jpg"
@@ -1489,7 +1718,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Understory"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_lucida.jpg"
@@ -1500,7 +1732,10 @@ const trees = [
     soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock"],
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-5)"],
-    sunlight: ["Full Sun", "Part Shade", "Shade"],
+    sunlight: ["Full Sun"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Canopy"],
+	benefits: ["Flowers", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_nigra.jpg"
@@ -1512,7 +1747,10 @@ const trees = [
     soilMoisture: ["Moist", "Wet"],
     CoW: ["Lowland", "(-4)"],
     sunlight: ["Full Sun"],
-    carbonate: ["Unknown"],
+	successionstage: ["Pioneer"],
+	canopylayer: ["Understory"],
+	benefits: ["Flowers", "Showy"],
+    carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_petiolaris.jpg"
   },
@@ -1523,6 +1761,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Lowland", "(-3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy", "Subcanopy"],
+	benefits: ["Evergreen", "Showy"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/thuja_occidentalis.jpg"
@@ -1534,6 +1775,9 @@ const trees = [
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Fragrant", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico"],
     image: "Images/tilia_americana.jpg"
@@ -1545,6 +1789,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Part Shade", "Shade"],
+	successionstage: ["Climax"],
+	canopylayer: ["Canopy"],
+	benefits: ["Evergreen", "Fragrant", "Showy"],
     carbonate: ["None"],
 	vendor: ["Hortico"],
     image: "Images/tsuga_canadensis.jpg"
@@ -1556,6 +1803,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(-2)"],
     sunlight: ["Full Sun", "Part Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Canopy"],
+	benefits: ["Showy"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/ulmus_americana.jpg"
@@ -1567,6 +1817,9 @@ const trees = [
     soilMoisture: ["Moist"],
     CoW: ["Variable", "(-1)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
+	successionstage: ["Intermediate"],
+	canopylayer: ["Understory"],
+	benefits: ["Flowers", "Fruit", "Showy"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/viburnum_lentago.jpg"
@@ -1600,6 +1853,9 @@ function runFilter() {
     soilMoisture: getChecked("soilMoisture"),
     CoW: getChecked("CoW"),
     sunlight: getChecked("sunlight"),
+	successionstage: getChecked("successionstage"),
+	canopylayer: getChecked("canopylayer"),
+	benefits: getChecked("benefits"),
     carbonate: document.getElementById("carbonate").value,
     vendor: getChecked("vendor"),
   };
@@ -1783,7 +2039,10 @@ function renderResults(results, isClearing = false) {
             <span ${labelStyle("soilTexture", tree.soilTexture)}>Soil Texture:</span> ${highlightMatches(tree.soilTexture, "soilTexture")}<br>
             <span ${labelStyle("soilMoisture", tree.soilMoisture)}>Soil Moisture:</span> ${highlightMatches(tree.soilMoisture, "soilMoisture")}<br>
             <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
-            <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
+            <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight Level:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
+			<span ${labelStyle("successionstage", tree.successionstage)}>Successional Stage:</span> ${highlightMatches(tree.successionstage, "successionstage")}<br>
+			<span ${labelStyle("canopylayer", tree.canopylayer)}>Canopy Layer:</span> ${highlightMatches(tree.canopylayer, "canopylayer")}<br>
+			<span ${labelStyle("benefits", tree.benefits)}>Benefits:</span> ${highlightMatches(tree.benefits, "benefits")}<br>
             <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}<br>
 			      <span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
           </div>
@@ -1819,6 +2078,9 @@ function updateCounter(categoryName, selectBoxId) {
     moistureChecks: "Select Soil Moisture(s)", 
     cowChecks: "Select CoW Class(es)", 
     sunlightChecks: "Select Sunlight Level(s)", 
+	successionstageChecks: "Select Successional Stage(s)",
+	canopylayerChecks: "Select Canopy Layer(s)",
+	benefitsChecks: "Select Benefit(s)",
     vendorChecks: "Select Vendor(s)" 
   };
   selectElement.textContent = checkedCount > 0 ? `${checkedCount} Selected` : (defaults[selectBoxId] || "Select Options");
@@ -1842,12 +2104,15 @@ function clearAllFilters() {
     document.querySelectorAll('.star-toggle').forEach(star => star.classList.remove('active'));
   }
 
-  ["textureChecks", "moistureChecks", "cowChecks", "sunlightChecks", "vendorChecks"].forEach(id => {
+  ["textureChecks", "moistureChecks", "cowChecks", "sunlightChecks", "successionstageChecks", "canopylayerChecks", "benefitsChecks", "vendorChecks"].forEach(id => {
     const nameMap = { 
       textureChecks: "soilTexture", 
       moistureChecks: "soilMoisture", 
       cowChecks: "CoW", 
       sunlightChecks: "sunlight", 
+	  successionstageChecks: "successionstage",
+	  canopylayerChecks: "canopylayer",
+	  benefitsChecks: "benefits",
       vendorChecks: "vendor" 
     };
     updateCounter(nameMap[id], id);
