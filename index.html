@@ -261,15 +261,30 @@ input[type="checkbox"] {
       background-color: #666;
     }
 
-    .tree {
-      display: flex;
-      justify-content: flex-start;
-      align-items: start;
-      gap: 2rem;
-      padding: 1.5rem 0;
-      border-bottom: 2px solid var(--secondary-accent, #BDBDBD) !important;
-      transition: all 0.2s ease;
-    }
+.tree {
+  position: relative !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+  gap: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 2px solid var(--secondary-accent, #BDBDBD) !important;
+  transition: all 0.2s ease;
+}
+
+.hazard-icon {
+  position: absolute !important; 
+  top: 10px !important;
+  right: 10px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 100;
+  background: transparent !important;
+  image-rendering: pixelated;
+  cursor: help;
+  margin: 0 !important;
+  flex: 0 0 0 !important;
+}
 
 #results:not(.grid-view) .tree {
   display: flex;
@@ -333,14 +348,16 @@ input[type="checkbox"] {
     }
 
     #results.grid-view .tree {
-      flex-direction: column;
+      display: flex;
+	  flex-direction: column;
       align-items: center;
       text-align: center;
       border: 1px solid var(--secondary-accent, #BDBDBD) !important;
       padding: 10px;
       cursor: pointer;
       gap: 0.5rem;
-    }
+	  position: relative !important;
+   }
 
     #results.grid-view .tree img {
       width: 100%;
@@ -599,6 +616,82 @@ button[onclick^="runFilter"] {
 #planBtn {
   background-color: var(--secondary-accent) !important;
 }
+
+
+.pixel-icon, .hazard-icon {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: inline-block;
+  background: transparent !important;
+  object-fit: contain;
+}
+
+.pixel-icon {
+  width: 32px !important; 
+  height: 32px !important;
+  cursor: help;
+}
+
+.hazard-icon {
+  position: absolute !important;
+  top: 10px !important;
+  right: 20px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 100;
+  flex: 0 0 0 !important; 
+  margin: 0 !important;
+  cursor: help;
+}
+
+.benefit-icons-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  min-height: 32px;
+}
+
+
+#results:not(.grid-view) .benefit-icons-row {
+  justify-content: center;
+  max-width: 160px;
+}
+
+#results.grid-view .benefit-icons-row {
+  justify-content: center;
+  order: 2;
+  margin-top: 5px;
+}
+
+#results.grid-view .tree img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain; 
+  background: transparent !important; 
+  margin-bottom: 4px;
+}
+
+#results:not(.grid-view) img {
+  width: 160px;
+  height: auto;
+  max-height: 160px;
+  object-fit: contain;
+  background: transparent !important;
+}
+
+#results:not(.grid-view) .tree > div:first-of-type {
+  width: 160px !important;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+#results:not(.grid-view) .hazard-icon {
+  right: -25px !important;
+  top: 15px !important;
+}
+
   </style>
 </head>
 
@@ -907,6 +1000,19 @@ function fadeAudio(audio) {
 }
 
 /* ============================================================
+   ICONS
+   ============================================================ */
+   
+   const benefitIcons = {
+  "Evergreen": "Images/evergreen.png",
+  "Flowers": "Images/flowers.png",
+  "Fragrant": "Images/fragrant.png",
+  "Fruit": "Images/fruit.png",
+  "Nuts": "Images/nuts.png",
+  "Showy": "Images/showy.png"
+};
+   
+/* ============================================================
    DROPDOWN CONTROLS
    ============================================================ */
    
@@ -980,6 +1086,7 @@ const trees = [
 	successionstage: ["Intermediate"],
 	canopylayer: ["Canopy"],
 	benefits: ["Showy"],
+	hazard: ["True"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/acer_saccharinum.jpg"
@@ -1456,6 +1563,7 @@ const trees = [
 	successionstage: ["Pioneer"],
 	canopylayer: ["Canopy"],
 	benefits: ["Fragrant", "Showy"],
+	hazard: ["True"],
     carbonate: ["High"],
 	vendor: ["Hortico"],
     image: "Images/populus_balsamifera.jpg"
@@ -1470,6 +1578,7 @@ const trees = [
 	successionstage: ["Pioneer"],
 	canopylayer: ["Canopy"],
 	benefits: ["Showy"],
+	hazard: ["True"],
     carbonate: ["Medium"],
 	vendor: ["Hortico"],
     image: "Images/populus_deltoides.jpg"
@@ -1484,6 +1593,7 @@ const trees = [
 	successionstage: ["Pioneer"],
 	canopylayer: ["Canopy"],
 	benefits: ["Showy"],
+	hazard: ["True"],
     carbonate: ["Medium"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_grandidentata.jpg"
@@ -1498,6 +1608,7 @@ const trees = [
 	successionstage: ["Pioneer"],
 	canopylayer: ["Canopy"],
 	benefits: ["Showy"],
+	hazard: ["True"],
     carbonate: ["High"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/populus_tremuloides.jpg"
@@ -1736,6 +1847,7 @@ const trees = [
 	successionstage: ["Pioneer"],
 	canopylayer: ["Canopy"],
 	benefits: ["Flowers", "Showy"],
+	hazard: ["True"],
     carbonate: ["Low"],
 	vendor: ["Hortico", "Verbinnens"],
     image: "Images/salix_nigra.jpg"
@@ -2020,45 +2132,65 @@ function renderResults(results, isClearing = false) {
     listContainer.className = "group-content";
 
     groups[percent].forEach(({ tree, ratio }) => {
-      const div = document.createElement("div");
-      div.className = "tree";
-      div.onclick = function(e) { 
-        if (!e.target.closest('.plan-selector')) this.classList.toggle('expanded'); 
-      };
+  const div = document.createElement("div");
+  div.className = "tree";
+  div.style.position = "relative";
+  
+  div.onclick = function(e) { 
+    if (!e.target.closest('.plan-selector')) this.classList.toggle('expanded'); 
+  };
 
-      const scoreStyle = `color: ${matchColor}; font-weight: 800;`;
+  const scoreStyle = `color: ${matchColor}; font-weight: 800;`;
 
-      div.innerHTML = `
-        <div>${tree.image ? `<img src="${tree.image}" alt="${tree.commonName}">` : ""}</div>
-        <div style="flex-grow: 1;">
-          <div class="score" style="${scoreStyle}">Match: ${percent}%</div>
-          <div><strong>${tree.commonName}</strong></div>
-          <div class="latin" style="font-size: 0.85rem; color: #666; font-style: italic;">${tree.species}</div>
-          <div class="meta">
-            <hr style="border: 0; border-top: 1.5px solid #E4D5C5;">
-            <span ${labelStyle("soilTexture", tree.soilTexture)}>Soil Texture:</span> ${highlightMatches(tree.soilTexture, "soilTexture")}<br>
-            <span ${labelStyle("soilMoisture", tree.soilMoisture)}>Soil Moisture:</span> ${highlightMatches(tree.soilMoisture, "soilMoisture")}<br>
-            <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
-            <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight Level:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
-			<span ${labelStyle("successionstage", tree.successionstage)}>Successional Stage:</span> ${highlightMatches(tree.successionstage, "successionstage")}<br>
-			<span ${labelStyle("canopylayer", tree.canopylayer)}>Canopy Layer:</span> ${highlightMatches(tree.canopylayer, "canopylayer")}<br>
-			<span ${labelStyle("benefits", tree.benefits)}>Benefits:</span> ${highlightMatches(tree.benefits, "benefits")}<br>
-            <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}<br>
-			      <span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
-          </div>
-        </div>
-        <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
-          <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
-            <input type="checkbox" class="plan-include" style="margin: 0;"> Add to Plan
-          </label>
-          <div class="qty-controls">
-            <label style="font-size: 0.75rem; margin: 0;">Quantity:</label>
-            <input type="number" class="plan-qty" value="1" min="1" style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
-          </div>
-        </div>`;
+  const iconsHtml = (tree.benefits || []).map(b => {
+    const src = benefitIcons[b];
+    return src ? `<img src="${src}" class="pixel-icon" title="${b}" alt="${b}">` : "";
+  }).join("");
+
+  const iconRow = `<div class="benefit-icons-row">${iconsHtml}</div>`;
+
+  const hazardHtml = (tree.hazard && tree.hazard.includes("True")) 
+    ? `<img src="Images/hazard.png" class="hazard-icon" title="Hazard Tree" alt="Hazard">` 
+    : "";
+
+  div.innerHTML = `
+    <div>
+      ${hazardHtml}
+      ${tree.image ? `<img src="${tree.image}" alt="${tree.commonName}">` : ""}
+      ${!isGridView ? iconRow : ""}
+    </div>
+    <div style="flex-grow: 1;">
+      <div class="score" style="${scoreStyle}">Match: ${percent}%</div>
+      <div><strong>${tree.commonName}</strong></div>
+      <div class="latin" style="font-size: 0.85rem; color: #666; font-style: italic;">${tree.species}</div>
       
-      listContainer.appendChild(div);
-    });
+      ${isGridView ? iconRow : ""} 
+
+      <div class="meta">
+        <hr style="border: 0; border-top: 1.5px solid #E4D5C5;">
+        <span ${labelStyle("soilTexture", tree.soilTexture)}>Soil Texture:</span> ${highlightMatches(tree.soilTexture, "soilTexture")}<br>
+        <span ${labelStyle("soilMoisture", tree.soilMoisture)}>Soil Moisture:</span> ${highlightMatches(tree.soilMoisture, "soilMoisture")}<br>
+        <span ${labelStyle("CoW", tree.CoW)}>CoW:</span> ${highlightMatches(tree.CoW, "CoW")}<br>
+        <span ${labelStyle("sunlight", tree.sunlight)}>Sunlight Level:</span> ${highlightMatches(tree.sunlight, "sunlight")}<br>
+        <span ${labelStyle("successionstage", tree.successionstage)}>Successional Stage:</span> ${highlightMatches(tree.successionstage, "successionstage")}<br>
+        <span ${labelStyle("canopylayer", tree.canopylayer)}>Canopy Layer:</span> ${highlightMatches(tree.canopylayer, "canopylayer")}<br>
+        <span ${labelStyle("benefits", tree.benefits)}>Benefits:</span> ${highlightMatches(tree.benefits, "benefits")}<br>
+        <span ${labelStyle("carbonate", tree.carbonate)}>Carbonate:</span> ${highlightMatches(tree.carbonate, "carbonate")}<br>
+        <span ${labelStyle("vendor", tree.vendor)}>Vendor:</span> ${highlightMatches(tree.vendor, "vendor")}
+      </div>
+    </div>
+    <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
+      <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
+        <input type="checkbox" class="plan-include" style="margin: 0;"> Add to Plan
+      </label>
+      <div class="qty-controls">
+        <label style="font-size: 0.75rem; margin: 0;">Quantity:</label>
+        <input type="number" class="plan-qty" value="1" min="1" style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+      </div>
+    </div>`;
+  
+  listContainer.appendChild(div);
+});
 
     details.appendChild(listContainer);
     container.appendChild(details);
