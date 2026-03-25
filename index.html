@@ -21,6 +21,8 @@ html {
   color: white;
   text-decoration: none;
   border-radius: 5px;
+  z-index: 10000;
+  display: block !important;
 }
 
     body {
@@ -511,11 +513,12 @@ summary::-webkit-details-marker {
     @media print {
       body { background-color: white !important; padding: 0; }
       .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
-      .filters, button, .help-icon, #clearBtn, .view-controls { display: none !important; }
+      .filters, button, .help-icon, #clearBtn, .view-controls { display: inline-block !important; }
       .tree { border-bottom: 1px solid #ccc; page-break-inside: avoid; }
     }
 
-    #clearBtn, #planBtn { width: 100%; grid-column: 1 / -1; margin-top: -10px; }
+    #clearBtn, { width: 100%; grid-column: 1 / -1; margin-top: -10px; }
+	##planBtn #clearCart { width: 50%; grid-column: 1 / -1}
 
 .update-footer {
   margin-top: 20px;
@@ -692,7 +695,148 @@ button[onclick^="runFilter"] {
   top: 15px !important;
 }
 
-  </style>
+#cart-toggle-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--secondary-accent);
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 10005;
+  font-size: 1.5rem;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  
+  transform: translate3d(0, 0, 0) scale(1);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease;
+}
+
+#cart-toggle-btn:hover {
+  transform: translate3d(0, 0, 0) scale(1.1);
+  background-color: var(--accent-color);
+}
+
+body.cart-open #cart-toggle-btn {
+  transform: translate3d(-390px, 0, 0) scale(1);
+  background-color: #d9534f;
+}
+
+body.cart-open #cart-toggle-btn:hover {
+  transform: translate3d(-390px, 0, 0) scale(1.1);
+}
+
+
+#cart-panel {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 350px;
+  max-width: 90vw;
+  height: 100vh;
+  background: white;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+  z-index: 10002;
+  
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  will-change: transform;
+}
+
+#cart-panel.open {
+  transform: translate3d(0, 0, 0);
+}
+
+
+#back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 15px;
+  background-color: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  display: none;
+  z-index: 10005;
+
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease;
+}
+
+body.cart-open #back-to-top {
+  transform: translate3d(-390px, 0, 0);
+}
+
+
+#cart-items-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+
+.cart-category-header {
+  font-weight: bold;
+  background: #eee;
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.cart-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item-row input {
+  width: 50px;
+  padding: 4px;
+  text-align: center;
+}
+
+.goal-tracker {
+  background: #fdfaf7;
+  padding: 15px;
+  border-top: 2px solid var(--accent-color);
+  margin-top: 10px;
+}
+
+#cart-panel .close-cart {
+  display: none;
+}
+
+#cart-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 12px;
+  font-weight: bold;
+  display: none;
+}
+
+</style>
 </head>
 
 <body>
@@ -704,12 +848,6 @@ button[onclick^="runFilter"] {
 <div class="container">
 <h1>Funded Tree and Shrub Environmental Preference Selector</h1>
 <p>Select multiple site conditions to filter species.</p>
-
-<div class="project-info" style="margin-bottom: 2rem; padding: 1rem; background: #fdfaf7; border-radius: 8px; border: 1px solid #ccc;">
-  <label for="projectTitle" style="font-size: 1.1rem;">Project Name:</label>
-  <input type="text" id="projectTitle" placeholder="e.g. RPXXXX LastName Planting Assortment" 
-       style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;">
-</div>
 
 <p style="font-size: 0.85rem; color: #555; margin: -10px 0 20px 0; display: flex; align-items: center; gap: 8px;">
   <span class="legend-star">★</span> 
@@ -883,14 +1021,11 @@ button[onclick^="runFilter"] {
   </div>
 
 
-  <button onclick="runFilter()">
-  Find matching species
+  <button onclick="runFilter()" style="margin-bottom: -10px">
+  Find Matching Species
 </button>
-  <button id="clearBtn" onclick="clearAllFilters()" style="display: none; background-color: #666;">
-  Clear All Filters
-</button>
-<button id="planBtn" onclick="exportPlantingPlan()" style="display: none; background-color: #33691E;">
-  Export Selection as Planting Plan
+  <button id="clearBtn" onclick="clearAllFilters()" style="display: inline-block; margin-top: 0px; background-color: #666">
+  Clear Filters & Results
 </button>
 
 </div>
@@ -1514,7 +1649,7 @@ const trees = [
   {
     species: "Picea glauca",
     commonName: "White Spruce",
-    soilTexture: ["Organic", "Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
+    soilTexture: ["Clay", "Fine Loam", "Coarse Loam", "Sand", "Rock", "Bedrock"],
     soilMoisture: ["Dry", "Fresh", "Moist"],
     CoW: ["Upland", "(3)"],
     sunlight: ["Full Sun", "Part Shade", "Shade"],
@@ -2019,9 +2154,241 @@ function runFilter() {
   });
 
   const results = scored.filter(r => r.score > 0 || r.maxScore === 0).sort((a, b) => b.ratio - a.ratio);
+  lastResults = results;
   renderResults(results);
-  document.getElementById('clearBtn').style.display = "block";
+  renderResults(results);
+  document.querySelectorAll('.filters input, .filters select').forEach(el => {
+    el.addEventListener('change', () => {
+        document.getElementById('clearBtn').style.display = "block";
+    });
+});
 }
+
+/* ============================================================ 
+   PROJECT PLANNER LOGIC 
+============================================================ */
+let cart = JSON.parse(localStorage.getItem('treeCart')) || {};
+
+function toggleCart(e) {
+    if (e) e.preventDefault();
+
+    const body = document.body;
+    const panel = document.getElementById('cart-panel');
+
+    const isOpen = body.classList.toggle('cart-open');
+
+    panel.classList.toggle('open', isOpen);
+
+    const icon = document.getElementById('cart-icon');
+    icon.textContent = isOpen ? "✕" : "📋";
+
+    const cartCount = document.getElementById('cart-count');
+
+    if (isOpen) {
+        cartCount.style.display = "none";
+    } else {
+        updateCartUI();
+    }
+}
+
+function clearCart() {
+    cart = {};
+    saveAndUpdate();
+}
+
+function getCategory(tree) {
+    const isSmall = tree.canopylayer.some(l => ["Understory", "Subcanopy"].includes(l));
+    const hasWildlifeTraits = tree.benefits.some(b => ["Flowers", "Fruit", "Nuts"].includes(b));
+    
+    if (isSmall && hasWildlifeTraits) return "Wildlife Benefit";
+    if (tree.successionstage.includes("Pioneer")) return "Pioneer";
+    if (tree.successionstage.includes("Climax")) return "Climax";
+    return "Other";
+}
+
+function handleAddRemove(speciesName) {
+    if (cart[speciesName]) {
+        delete cart[speciesName];
+    } else {
+        const tree = trees.find(t => t.species === speciesName);
+        cart[speciesName] = { 
+            common: tree.commonName, 
+            qty: 1, 
+            category: getCategory(tree) 
+        };
+    }
+    saveAndUpdate();
+}
+
+function updateQty(speciesName, qty) {
+    if (qty <= 0) delete cart[speciesName];
+    else cart[speciesName].qty = parseInt(qty);
+    saveAndUpdate();
+}
+
+function saveAndUpdate() {
+    localStorage.setItem('treeCart', JSON.stringify(cart));
+    updateCartUI();
+
+    if (typeof lastResults !== 'undefined') renderResults(lastResults); 
+}
+
+function setCategory(speciesName, newCat) {
+    if (!cart[speciesName]) return;
+    cart[speciesName].category = newCat;
+    saveAndUpdate();
+}
+
+function updateCartUI() {
+    const container = document.getElementById('cart-items-container');
+    const catOrder = ["Pioneer", "Climax", "Wildlife Benefit", "Other"];
+    const target = parseInt(document.getElementById('target-goal').value) || 0;
+
+    let html = "";
+    let grandTotal = 0;
+
+    const targetP = 0.4;
+    const targetC = 0.4;
+    const targetW = 0.2;
+
+    const requiredP = Math.floor(target * targetP);
+    const requiredC = Math.floor(target * targetC);
+    const requiredW = target - requiredP - requiredC;
+
+    let counts = { Pioneer: 0, Climax: 0, "Wildlife Benefit": 0, Other: 0 };
+
+    Object.values(cart).forEach(item => {
+        const qty = parseInt(item.qty) || 0;
+        grandTotal += qty;
+        if (counts[item.category] !== undefined) {
+            counts[item.category] += qty;
+        } else {
+            counts["Other"] += qty;
+        }
+    });
+
+    catOrder.forEach((cat) => {
+        const items = Object.entries(cart).filter(([_, obj]) => obj.category === cat);
+        if (items.length === 0) return;
+
+        const catTotal = counts[cat];
+        let required = 0;
+        let headerText = `${cat}: `;
+
+        if (cat === "Other") {
+            headerText += `${catTotal}`;
+        } else if (target > 0) {
+            if (cat === "Pioneer") required = requiredP;
+            else if (cat === "Climax") required = requiredC;
+            else if (cat === "Wildlife Benefit") required = requiredW;
+
+            const diff = catTotal - required;
+            if (diff > 0) {
+                headerText += `<span style="color:#d9534f;">${catTotal}</span> / ${required} <span style="color:#d9534f; font-size:0.85em;">(Over by ${diff})</span>`;
+            } else if (diff < 0) {
+                headerText += `${catTotal} / ${required} <span style="color:#888; font-size:0.85em;">(Remaining: ${Math.abs(diff)})</span>`;
+            } else {
+                headerText += `${catTotal} / ${required}`;
+            }
+        } else {
+            headerText += `${catTotal}`;
+        }
+
+        html += `<div class="cart-category-header" style="background:rgba(0,0,0,0.05); padding:8px; margin-top:12px; font-weight:bold; font-size:0.9rem; border-radius:4px;">${headerText}</div>`;
+
+        items.forEach(([name, obj]) => {
+            const btnBase = "width:24px; height:24px; line-height:22px; text-align:center; padding:0; font-size:11px; cursor:pointer; border:1px solid #bbb; background:#fff; border-radius:3px; font-weight:bold; color:#333;";
+            
+            const pBtn = cat !== "Pioneer" ? `<button onclick="setCategory('${name}', 'Pioneer')" style="${btnBase}" title="Move to Pioneer">P</button>` : "";
+            const cBtn = cat !== "Climax" ? `<button onclick="setCategory('${name}', 'Climax')" style="${btnBase}" title="Move to Climax">C</button>` : "";
+            const wBtn = cat !== "Wildlife Benefit" ? `<button onclick="setCategory('${name}', 'Wildlife Benefit')" style="${btnBase}" title="Move to Wildlife Benefit">W</button>` : "";
+            const oBtn = cat !== "Other" ? `<button onclick="setCategory('${name}', 'Other')" style="${btnBase}" title="Move to Other">O</button>` : "";
+
+            html += `
+            <div class="cart-item-row" style="display:flex; justify-content:space-between; align-items:center; padding: 10px 5px; border-bottom:1px solid rgba(0,0,0,0.05);">
+                <div style="flex:1; display:flex; align-items:center; gap:10px; overflow:hidden;">
+                    <span style="font-size:0.85rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${obj.common}</span>
+                    <div style="display:flex; gap:3px; flex-shrink:0;">
+                        ${pBtn}${cBtn}${wBtn}${oBtn}
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                    <input type="number" value="${obj.qty}" min="1" onchange="updateQty('${name}', this.value)" style="width: 45px; padding: 3px; text-align: center; border:1px solid #ccc; border-radius:3px;">
+                    <span onclick="removeItem('${name}')" style="cursor:pointer; color:#d9534f; font-weight:bold; font-size: 1.2rem; padding-left:5px;">✕</span>
+                </div>
+            </div>`;
+        });
+    });
+
+    container.innerHTML = html || "<p style='color:#999; padding:20px; text-align:center;'>No trees added yet.</p>";
+
+    const planBtn = document.getElementById('planBtn');
+    if (planBtn) planBtn.style.display = grandTotal > 0 ? "block" : "none";
+    
+    const cartCountEl = document.getElementById('cart-count');
+    if (cartCountEl) {
+    cartCountEl.innerText = grandTotal;
+
+    const isOpen = document.body.classList.contains('cart-open');
+
+    if (isOpen) {
+        cartCountEl.style.display = "none";
+    } else {
+        cartCountEl.style.display = grandTotal > 0 ? "block" : "none";
+    }
+}
+
+    let summaryHtml = `<strong>Total:</strong> ${target > 0 ? `${grandTotal} / ${target}` : `${grandTotal}`}`;
+    
+    if (counts["Other"] > 0 && target > 0) {
+        summaryHtml += ` <span style="color:#d9534f; font-size:0.8rem; font-weight:bold;">(${counts["Other"]} in Other Category)</span>`;
+    }
+    summaryHtml += `<br>`;
+    
+    if (target > 0) {
+        let totalRemaining = 0;
+        let totalOver = 0;
+
+        ["Pioneer", "Climax", "Wildlife Benefit"].forEach(c => {
+            let req = (c === "Pioneer") ? requiredP : (c === "Climax") ? requiredC : requiredW;
+            const diff = counts[c] - req;
+            if (diff < 0) totalRemaining += Math.abs(diff);
+            if (diff > 0) totalOver += diff;
+        });
+        
+        totalOver += counts["Other"];
+
+        if (totalRemaining > 0) {
+            summaryHtml += `<small>Total Remaining to Goal: <strong>${totalRemaining}</strong></small><br>`;
+        }
+        if (totalOver > 0) {
+            summaryHtml += `<small>Total Over Goal: <span style="color:#d9534f; font-weight:bold;">${totalOver}</span></small>`;
+        }
+    }
+
+    document.getElementById('cart-summary-stats').innerHTML = summaryHtml;
+}
+
+function removeItem(speciesName) {
+    delete cart[speciesName];
+    saveAndUpdate();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    updateCartUI();
+    document.getElementById('cart-toggle-btn')
+    .addEventListener('click', toggleCart);
+	
+    if (Object.keys(cart).length > 0 && !sessionStorage.getItem('sessionActive')) {
+        setTimeout(() => {
+            const keepItems = confirm("Welcome back! You still have trees in your plan from a previous session. \n\nClick OK to keep them, or click Cancel to clear your plan and start fresh.");
+            if (!keepItems) {
+                clearCart();
+            }
+        }, 500);
+    }
+    sessionStorage.setItem('sessionActive', 'true');
+});
 
 /* ============================================================
    RENDERING
@@ -2068,22 +2435,28 @@ function renderResults(results, isClearing = false) {
   const planBtn = document.getElementById("planBtn");
   const resultsHeader = document.getElementById("resultsHeader");
   const clearBtn = document.getElementById("clearBtn");
+    if (clearBtn) clearBtn.style.display = "inline-block";
   const isGridView = container.classList.contains("grid-view"); 
 
   container.innerHTML = ""; 
 
   if (isClearing || results.length === 0) {
     if (pdfBtn) pdfBtn.style.display = "none";
-    if (planBtn) planBtn.style.display = "none";
+    if (planBtn) {
+      const hasItems = Object.keys(cart).length > 0;
+      planBtn.style.display = hasItems ? "block" : "none";
+    }
     if (resultsHeader) resultsHeader.style.display = "none";
-    if (isClearing && clearBtn) clearBtn.style.display = "none";
     if (results.length === 0 && !isClearing) container.innerHTML = "<p>No suitable species found. Try unstarring some categories and searching again.</p>";
     return;
   }
 
   resultsHeader.style.display = "flex";
   if (pdfBtn) pdfBtn.style.display = "block";
-  if (planBtn) planBtn.style.display = "block";
+  if (planBtn) {
+    const hasItems = Object.keys(cart).length > 0;
+    planBtn.style.display = hasItems ? "block" : "none";
+}
   document.getElementById("resultCount").textContent = `${results.length} species found`;
 
   const isMiss = (category, treeTraits) => {
@@ -2181,11 +2554,22 @@ function renderResults(results, isClearing = false) {
     </div>
     <div class="plan-selector" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 110px; gap: 8px; padding-top: 10px;">
       <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;">
-        <input type="checkbox" class="plan-include" style="margin: 0;"> Add to Plan
+        <input 
+  type="checkbox" 
+  class="plan-include" 
+  onchange="handleAddRemove('${tree.species}')"
+  ${cart[tree.species] ? "checked" : ""}
+> Add to Plan
       </label>
       <div class="qty-controls">
         <label style="font-size: 0.75rem; margin: 0;">Quantity:</label>
-        <input type="number" class="plan-qty" value="1" min="1" style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
+        <input 
+  type="number" 
+  class="plan-qty" 
+  value="${cart[tree.species]?.qty || 1}" 
+  min="1"
+  onchange="updateQty('${tree.species}', this.value)"
+  style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 4px;">
       </div>
     </div>`;
   
@@ -2274,7 +2658,18 @@ function setView(viewType, btn) {
 
 function exportPlantingPlan() {
   const projectTitle = document.getElementById("projectTitle").value || "Planting Plan";
-  const selectedTrees = [];
+  const selectedTrees = Object.entries(cart).map(([species, obj]) => {
+    return {
+        common: obj.common,
+        latin: species,
+        qty: obj.qty
+    };
+});
+
+if (selectedTrees.length === 0) {
+    alert("Your plan is empty.");
+    return;
+}
   
   const s = seasons[currentSeasonIndex];
 
@@ -2284,19 +2679,6 @@ function exportPlantingPlan() {
 
   const rowStripeColor = (s.name === 'summer') ? '#E8F5E9' : s.container;
 
-  document.querySelectorAll(".tree").forEach(treeDiv => {
-    if (treeDiv.querySelector(".plan-include").checked) {
-      const common = treeDiv.querySelector("strong").textContent;
-      const latin = treeDiv.querySelector(".latin").textContent;
-      const qty = treeDiv.querySelector(".plan-qty").value;
-      selectedTrees.push({ common, latin, qty });
-    }
-  });
-
-  if (selectedTrees.length === 0) {
-    alert("Please select species first.");
-    return;
-  }
 
   const totalQty = selectedTrees.reduce((sum, t) => sum + parseInt(t.qty || 0), 0);
   const printWindow = window.open('', '_blank');
@@ -2357,11 +2739,44 @@ function exportPlantingPlan() {
 }
 </script>
 
+<a href="#top" id="back-to-top">Back to Top ↑</a>
+
 <footer class="update-footer">
   <p>Last Updated: <time id="last-updated"></time></p>
 </footer>
 
-<a href="#top" id="back-to-top">Back to Top ↑</a>
+<a href="#" id="cart-toggle-btn"><span id="cart-icon">📋</span><span id="cart-count" style="position:absolute; top:0; right:0; background:red; font-size:10px; padding:2px 6px; border-radius:10px; display:none;">0</span></a>
+
+<div id="cart-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div class="project-info" style="width: 80%; margin-top: 2rem; padding: 1rem; background: #fdfaf7; border-radius: 8px; border: 1px solid #ccc;">
+  <label for="projectTitle" style="font-size: 1.1rem;">Project Name:</label>
+  <input type="text" id="projectTitle" placeholder="e.g. RPXXXX LastName" 
+       style="width: 100%; box-sizing: border-box; padding: 10px; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc;">
+</div>
+    <button onclick="toggleCart()" style="background:none; color:#333; font-size:1.5rem; border:none; padding:0; width:auto; cursor:pointer; text-decoration: none !important; outline: none;">✕</button>
+  </div>
+
+  <div style="margin-top:10px;">
+    <label style="font-size:0.8rem;">Target Goal:</label>
+    <input type="number" id="target-goal" placeholder="e.g. 1500" onchange="updateCartUI()" style="width:100px;">
+  </div>
+
+  <div id="cart-items-container">
+    </div>
+
+  <div class="goal-tracker">
+    <div id="cart-summary-stats"></div>
+    <div id="cart-proportion-stats" style="font-size:0.8rem; margin-top: 10px; color:#555;"></div>
+    <div style="display: flex; gap: 10px; margin-top: 10px; width: 100%;">
+      <button id="planBtn" onclick="exportPlantingPlan()" style="flex: 1; background-color: #33691E; display: none; margin-top: 0;">
+        Export Selection
+      </button>
+      <button id="clearCart" onclick="clearCart()" style="flex: 1; background:#999; margin-top: 0;">
+        Clear Plan
+      </button>
+    </div>
+</div>
 
 <script>
   const date = new Date(document.lastModified);
