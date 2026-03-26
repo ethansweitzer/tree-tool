@@ -346,7 +346,7 @@ input[type="checkbox"] {
     #results.grid-view {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
+	  margin-bottom:-16px;
     }
 
     #results.grid-view .tree {
@@ -1031,15 +1031,15 @@ body.cart-open #back-to-top {
 </div>
 
 <div class="view-controls">
-  <button class="view-btn active" onclick="setView('list', this)">List View</button>
-  <button class="view-btn" onclick="setView('grid', this)">Grid View</button>
+  <button class="view-btn active" onclick="setView('grid', this)">Grid View</button>
+  <button class="view-btn" onclick="setView('list', this)">List View</button>
 </div>
 
 <h2 id="resultsHeader" style="display: none; justify-content: space-between; align-items: center;">
   Results 
   <span id="resultCount" style="font-size: 1rem; font-weight: normal; color: #666;"></span>
 </h2>
-<div id="results"></div>
+<div id="results" class="grid-view"></div>
 
 <script>
 
@@ -2741,7 +2741,7 @@ if (selectedTrees.length === 0) {
 
 <a href="#top" id="back-to-top">Back to Top ↑</a>
 
-<footer class="update-footer">
+<footer class="update-footer" style="margin-top:32px">
   <p>Last Updated: <time id="last-updated"></time></p>
 </footer>
 
